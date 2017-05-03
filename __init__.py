@@ -61,9 +61,9 @@ __classifiers__ = [
     'Topic :: Text Processing :: Linguistic',
 ]
 
-from .stringdists import lcs
-from .stringdists import longlcs
-from .stringdists import damerau_levenshtein_distance
+from stringdists import lcs
+from stringdists import longlcs
+from stringdists import damerau_levenshtein_distance
 
 from .tokendists import matching_coefficient
 from .tokendists import jaccard
