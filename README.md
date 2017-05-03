@@ -11,7 +11,8 @@ Features
 ----------
 
 
-  ORGANIZZAZIONE DIRECTORY
+ORGANIZZAZIONE DIRECTORY
+--------------------------
 
   |----> phasis                 -- Directory moduli dell'applicativo
   |----> data
@@ -40,11 +41,19 @@ Requirements
 Citing TextSim
 -----------------
 
-Copyrigth
-------------
-
-
-  AUTORE
+AUTORE
+--------
+  
   Massimo Gerardi
   Web : http://www.gnumangu.com
   E-Mail: gnumagnu@gmail.com
+
+
+Copyrigth
+------------
+
+Acknowledgment
+-------------------
+
+Thanks to Gensim, Phasis and Polyglot documentation
+  
