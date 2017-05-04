@@ -61,9 +61,11 @@ __classifiers__ = [
     'Topic :: Text Processing :: Linguistic',
 ]
 
-from stringdists import lcs
-from stringdists import longlcs
-from stringdists import damerau_levenshtein_distance
+from .stringdists import lcs
+from .stringdists import longlcs
+from .stringdists import damerau_levenshtein_distance
+
+__all__ = ['lcs','longlcs','damerau_levenshtein_distance']
 
 from .tokendists import matching_coefficient
 from .tokendists import jaccard
@@ -71,13 +73,12 @@ from .tokendists import dice_coefficient
 from .tokendists import overlap
 from .tokendists import euclidean
 from .tokendists import manhattan
-from .tokendists import edit_distance
 from .tokendists import binary_distance
 from .tokendists import masi_distance
 from .tokendists import interval_distance
 from .tokendists import jaccard_ulacia
 
-__all__ = [
+__tokendists__ = [
     'lcs',
     'longlcs',
     'damerau_levenshtein_distance',
@@ -87,9 +88,33 @@ __all__ = [
     'overlap',
     'euclidean',
     'manhattan',
-    'edit_distance',
     'binary_distance',
     'masi_distance',
     'interval_distance',
     'jaccard_ulacia',
 ]
+
+for dist in __tokendists__:
+	__all__.append(dist)
+
+importError = False
+try:
+	import nltk
+except ImportError:
+	print('NLTK package most be instaled for some stringdists.')
+	pass
+finally:
+	if not importError:
+		from nltk.metrics import edit_distance
+		__all__.append('edit_distance')
+
+importError = False
+try:
+	import sklearn
+except ImportError:
+	print('sklearn package most be instaled for some tokendists.')
+	pass
+finally:
+	if not importError:
+		from sklearn.metrics.pairwise import manhattan_distances as manhattan_sklearn
+		__all__.append('manhattan_sklearn')

@@ -9,8 +9,6 @@ Based on character similarity calculations.
 
 """
 
-from symbol import except_clause
-
 try:
     from jellyfish import *
 except:
@@ -18,7 +16,6 @@ except:
     pass
 
 __author__ = 'Pablo'
-#similitudes basadas en caracteres
 
 def lcs(xstr, ystr,doc1=None,doc2=None):
     """
@@ -124,6 +121,7 @@ def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
     >>> s2 = "smellyfishs"
     >>>damerau_levenshtein_distance(s1,s2) == 0.7272727272727273
     True
+
     Damerau-Levenshtein Distance in Python _ Guy Rutenberg.htm
     """
     if doc1 and doc2:#entrada de doc
@@ -152,17 +150,14 @@ def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
                             )
             if i and j and s1[i]==s2[j-1] and s1[i-1] == s2[j]:
                 d[(i,j)] = min (d[(i,j)], d[i-2,j-2] + cost) # transposition
-    if lenstr1 < lenstr2:
-        tmp=lenstr2
-    else:
-        tmp=lenstr1
-    return 1-float(float(d[lenstr1-1,lenstr2-1])/tmp)
+    
+    lengthmax = max(s1.__len__(), s2.__len__())
+
+    return 1-float(float(d[lenstr1-1,lenstr2-1])/lengthmax)
 
 if __name__ == '__main__':
-    doc1=None#'test/chardists_a.txt'#raw_input("Escribe el camino de doc1")
-    doc2=None#'test/chardists_b.txt'#raw_input("Escribe el camino de doc2")
-    s1=input("Escribe el texto")#"MZJAWXU" "jellyfish"
-    s2=input("Escribe el texto")#"XMJYAUZ" "smellyfishs"
+    s1=input("Input text A:")
+    s2=input("Input text B:")
     print("La subsecuencia mas larga con el metodo LCS es", lcs(s1,s2,doc1,doc2))
     print("La subsecuencia mas larga con el metodo LCS es de longitud es ",longlcs(s1,s2,doc1,doc2))
     print("La respuesta de la distancia Damerau_levenshtein_distance",damerau_levenshtein_distance(s1,s2,doc1,doc2))

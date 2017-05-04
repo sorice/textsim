@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-String Similarity Distances
+Token Similarity Distances
 ==================================
 
 Based on term/token similarity calculations.
@@ -13,7 +13,6 @@ __author__ = 'Pablo'
 
 import nltk
 import math
-import stringdists
 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -284,7 +283,7 @@ def euclidean(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
                 suma+=pow(self.tf(s1[i],s1) - self.tf(s2[i],s2),2)
             return float(1-float(pow(suma,0.5)))
 
-def manhattan(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
+def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
     """
     La distancia de Manhattan es una distancia que tiende a 0 mientras mas
     semejantes son los vectores. Esta medida utiliza el metodo tf para asignarle
@@ -317,33 +316,21 @@ def manhattan(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    try:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
-        s1=s1.lower()
-        s2=s2.lower()
-        d1=set(self.stop_words(word_tokenize(s1),idioma))#filtrado del texto
-        d2=set(self.stop_words(word_tokenize(s2),idioma))#filtrado del texto
-        suma=0.0
-        if len(s1)<len(s2):#para ver hasta donde llegan las iteraciones
-            for i in range(len(s1)):
-                suma+=float(pow(self.tf(d1[i],d1)-self.tf(d2[i],d2),2))
-            return float(1-suma)
-        else:
-            for i in range(len(v2)):
-                suma+=float(pow(self.tf(d1[i],d1)-self.tf(d2[i],d2),2))
-            return float(1-suma)
-    finally:#entrada de cadenas
-        s1=self.stop_words(word_tokenize(s1),idioma)
-        s2=self.stop_words(word_tokenize(s2),idioma)
-        suma=0.0
-        if len(s1)<len(s2):
-            for i in range(len(s1)):
-                suma+=float(pow(self.tf(s1[i],s1)-self.tf(s2[i],s2),2))
-            return float(1-suma)
-        else:
-            for i in range(len(s2)):
-                suma+=float(pow(self.tf(s1[i],s1)-self.tf(s2[i],s2),2))
-            return float(1-suma)
+    
+    if not isinstance(s1, str) or not isinstance(s2, str):
+        raise TypeError('Data values must be string type.')
+
+    s1=stop_words(word_tokenize(s1),idioma)
+    s2=stop_words(word_tokenize(s2),idioma)
+    suma=0.0
+    if len(s1)<len(s2):
+        for i in range(len(s1)):
+            suma+=float(pow(tf(s1[i],s1)-tf(s2[i],s2),2))
+        return float(1-suma)
+    else:
+        for i in range(len(s2)):
+            suma+=float(pow(tf(s1[i],s1)-tf(s2[i],s2),2))
+        return float(1-suma)
 
 def num(s1,s2,idioma):#metodo auxiliar que calcula la parte del numerador del metodo coseno
     s1=s1.lower()
@@ -356,6 +343,7 @@ def num(s1,s2,idioma):#metodo auxiliar que calcula la parte del numerador del me
     for i in range(len(d1.intersection(d2))):
         suma+=self.tf(s1[i],s1) * self.tf(s2[i],s2)
     return suma
+
 def norma(s,idioma):#metodo para normalizar
     s=s.lower()
     d1=set(self.stop_words(word_tokenize(s),idioma))
@@ -364,6 +352,7 @@ def norma(s,idioma):#metodo para normalizar
     for i in range(len(d1)):
         resultado+=pow(self.tf(s[i],s),2)
     return resultado
+
 def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     """
     La distancia de Coseno es una distancia que tiende a 1 mientras mas
@@ -399,69 +388,6 @@ def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
         result = self.num(s1,s2,idioma)/pow(self.norma(s1,idioma)*self.norma(s2,idioma),0.5)
     
     return result
-    
-def _edit_dist_init(len1, len2):
-    lev = []
-    for i in range(len1):
-        lev.append([0] * len2)  # initialize 2D array to zero
-    for i in range(len1):
-        lev[i][0] = i           # column 0: 0,1,2,3,4,...
-    for j in range(len2):
-        lev[0][j] = j           # row 0: 0,1,2,3,4,...
-    return lev
-
-
-def _edit_dist_step(lev, i, j, s1, s2, transpositions=False):
-    c1 = s1[i - 1]
-    c2 = s2[j - 1]
-
-    # skipping a character in s1
-    a = lev[i - 1][j] + 1
-    # skipping a character in s2
-    b = lev[i][j - 1] + 1
-    # substitution
-    c = lev[i - 1][j - 1] + (c1 != c2)
-
-    # transposition
-    d = c + 1  # never picked by default
-    if transpositions and i > 1 and j > 1:
-        if s1[i - 2] == c2 and s2[j - 2] == c1:
-            d = lev[i - 2][j - 2] + 1
-
-    # pick the cheapest
-    lev[i][j] = min(a, b, c, d)
-
-
-def edit_distance(s1, s2, transpositions=False):
-    """
-    Calculate the Levenshtein edit-distance between two strings.
-    The edit distance is the number of characters that need to be
-    substituted, inserted, or deleted, to transform s1 into s2.  For
-    example, transforming "rain" to "shine" requires three steps,
-    consisting of two substitutions and one insertion:
-    "rain" -> "sain" -> "shin" -> "shine".  These operations could have
-    been done in other orders, but at least three steps are needed.
-
-    This also optionally allows transposition edits (e.g., "ab" -> "ba"),
-    though this is disabled by default.
-
-    @param s1, s2: The strings to be analysed
-    @param transpositions: Whether to allow transposition edits
-    @type s1: str
-    @type s2: str
-    @type transpositions: bool
-    @rtype: int
-    """
-    # set up a 2-D array
-    len1 = len(s1)
-    len2 = len(s2)
-    lev = self._edit_dist_init(len1 + 1, len2 + 1)
-
-    # iterate over the array
-    for i in range(len1):
-        for j in range(len2):
-            self._edit_dist_step(lev, i + 1, j + 1, s1, s2, transpositions=transpositions)
-    return lev[len1][len2]
 
 def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
     """Simple equality test.
@@ -651,22 +577,6 @@ def custom_distance(file):
     return lambda x,y:data[frozenset([x,y])]
 
 if __name__ == '__main__':
-        cl=Stringdists()
-#         edit_distance_examples = [
-#         ("rain", "shine"), ("abcdef", "acbdef"), ("language", "lnaguaeg"),
-#         ("language", "lnaugage"), ("language", "lngauage")]
-#         for s1, s2 in edit_distance_examples:
-#             print("Edit distance between '%s' and '%s':" % (s1, s2), cl.edit_distance(s1, s2))
-#         for s1, s2 in edit_distance_examples:
-#             print("Edit distance with transpositions between '%s' and '%s':" % (s1, s2), cl.edit_distance(s1, s2, transpositions=True))
-# 
-#         s1 = set([1, 2, 3, 4])
-#         s2 = set([3, 4, 5])
-#         print("s1:", s1)
-#         print("s2:", s2)
-# 
-#         doc1=raw_input("Escribe el camino del doc1")
-#         doc2=raw_input("Escribe el camino del doc2")
         doc1=None
         doc2=None
         #v1=raw_input("Escribe el texto")
