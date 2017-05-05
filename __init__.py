@@ -61,5 +61,5 @@ __classifiers__ = [
     'Topic :: Text Processing :: Linguistic',
 ]
 
-from stringdists import *
-from tokendists import *
+from textsim.stringdists import *
+from textsim.tokendists import *

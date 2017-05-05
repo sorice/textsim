@@ -9,7 +9,7 @@ from .tokendists import masi_distance
 from .tokendists import interval_distance
 from .tokendists import jaccard_ulacia
 
-__tokendists__ = [
+__all__ = [
     'matching_coefficient',
     'jaccard',
     'dice_coefficient',
@@ -21,11 +21,6 @@ __tokendists__ = [
     'interval_distance',
     'jaccard_ulacia',
 ]
-
-for dist in __tokendists__:
-	__all__.append(dist)
-
-
 
 importError = False
 try:

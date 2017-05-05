@@ -17,6 +17,19 @@ except:
     print("'jellyfish package isn't installed.")
     pass
 
+#Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators
+importError = False
+try:
+    import nltk
+except ImportError:
+    print('NLTK package most be instaled for some stringdists.')
+    pass
+finally:
+    if not importError:
+        from nltk.metrics import edit_distance as edit_distance_nltk
+
+from ..decorators import score_original
+
 def lcs(s1, s2):
     """
     Devuelve la subsecuencia mas larga
@@ -131,6 +144,10 @@ def damerau_levenshtein_distance(s1, s2):
     lengthmax = max(s1.__len__(), s2.__len__())
 
     return 1-float(float(d[lenstr1-1,lenstr2-1])/lengthmax)
+
+@score_original
+def edit_distance(s1,s2):
+    return edit_distance_nltk(s1,s2)
 
 if __name__ == '__main__':
     s1=input("Input text A:")
