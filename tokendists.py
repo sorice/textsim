@@ -34,7 +34,7 @@ def len_texto(direccion_doc,idioma):
     else:
         input_file=open(direccion_doc,'r')
         v1=input_file.read()
-        d1=set(self.stop_words(word_tokenize(v1),idioma))
+        d1=set(stop_words(word_tokenize(v1),idioma))
         return len(d1)
     
 #metodo para eliminar palabras vacias de un texto
@@ -45,8 +45,8 @@ def stop_words(texto_arreglo,idioma = 'english'):
 def preprocesamiento(s1,s2,idioma='english'):
     c1=s1.lower()
     c2=s2.lower()
-    d1=set(self.stop_words(word_tokenize(c1),idioma))#filtrado del texto
-    d2=set(self.stop_words(word_tokenize(c2),idioma))#filtrado del texto
+    d1=set(stop_words(word_tokenize(c1),idioma))#filtrado del texto
+    d2=set(stop_words(word_tokenize(c2),idioma))#filtrado del texto
     return d1,d2
  
 def leer(doc1,doc2):
@@ -98,8 +98,8 @@ def matching_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     """
     #Condicion necesaria para el algoritmo los vectores deben ser de la misma longitud, utiliza un metodo auxiliar
     if doc1 and doc2:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
-    d1,d2=self.preprocesamiento(s1, s2, idioma)
+        s1,s2=leer(doc1, doc2)
+    d1,d2=preprocesamiento(s1, s2, idioma)
     if len(d1)==len(d2):#condicion para ver si los doc tienen la misma longitud
         interseccion=d1.intersection(d2)
         return float(1-((float(len(d1))-float(len(interseccion))))/len(d1))
@@ -135,8 +135,8 @@ def jaccard(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
     if doc1 and doc2:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
-    d1,d2=self.preprocesamiento(s1, s2, idioma)
+        s1,s2=leer(doc1, doc2)
+    d1,d2=preprocesamiento(s1, s2, idioma)
     c1 = d1 & d2
     c2 = d1 | d2
     if len(c2) == 0:
@@ -175,8 +175,8 @@ def dice_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
     if doc1 and doc2:#entrada de doc
-        s1,s2=self.leer(doc1,doc2)
-    d1,d2=self.preprocesamiento(s1,s2)
+        s1,s2=leer(doc1,doc2)
+    d1,d2=preprocesamiento(s1,s2)
     c1 = d1 & d2
     c2 = d1 | d2
     return 2*(float(len(c1)))/(float(len(c2))+float(len(c2)))
@@ -211,8 +211,8 @@ def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
     if doc1 and doc2:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
-    d1,d2=self.preprocesamiento(s1, s2, idioma)
+        s1,s2=leer(doc1, doc2)
+    d1,d2=preprocesamiento(s1, s2, idioma)
     if float(min(len(d1),len(d2))) == 0:
         result = 'inf'
     else:
@@ -254,33 +254,33 @@ def euclidean(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
     try:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
+        s1,s2=leer(doc1, doc2)
         s1=sw.lower()
         s2=s2.lower()
-        d1=set(self.stop_words(word_tokenize(s1),idioma))#filtrado del texto
-        d2=set(self.stop_words(word_tokenize(s2),idioma))#filtrado del texto
+        d1=set(stop_words(word_tokenize(s1),idioma))#filtrado del texto
+        d2=set(stop_words(word_tokenize(s2),idioma))#filtrado del texto
         suma=0
         if len(s1)<len(s2):#Para ver hasta donde recorrer que no se vaya de rango las iteraciones
             for i in range(len(d1)):
-                suma+=pow(self.tf(d1[i],d1) - self.tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
+                suma+=pow(tf(d1[i],d1) - tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
             return float(1-float(pow(suma,0.5)))
         else:
             for i in range(len(d2)):
-                suma+=pow(self.tf(d1[i],d1) - self.tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
+                suma+=pow(tf(d1[i],d1) - tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
             return float(1-float(pow(suma,0.5)))
     finally:#entrada de cadenas
         s1=s1.lower()
         s2=s2.lower()
-        s1=self.stop_words(word_tokenize(s1),idioma)
-        s2=self.stop_words(word_tokenize(s2),idioma)
+        s1=stop_words(word_tokenize(s1),idioma)
+        s2=stop_words(word_tokenize(s2),idioma)
         suma=0
         if len(s1)<len(s2):
             for i in range(len(s1)):
-                suma+=pow(self.tf(s1[i],s1) - self.tf(s2[i],s2),2)
+                suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
             return float(1-float(pow(suma,0.5)))
         else:
             for i in range(len(s2)):
-                suma+=pow(self.tf(s1[i],s1) - self.tf(s2[i],s2),2)
+                suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
             return float(1-float(pow(suma,0.5)))
 
 def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
@@ -335,22 +335,22 @@ def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
 def num(s1,s2,idioma):#metodo auxiliar que calcula la parte del numerador del metodo coseno
     s1=s1.lower()
     s2=s2.lower()
-    d1=set(self.stop_words(word_tokenize(s1),idioma))
-    d2=set(self.stop_words(word_tokenize(s2),idioma))
-    s1=self.stop_words(word_tokenize(s1),idioma)
-    s2=self.stop_words(word_tokenize(s2),idioma)
+    d1=set(stop_words(word_tokenize(s1),idioma))
+    d2=set(stop_words(word_tokenize(s2),idioma))
+    s1=stop_words(word_tokenize(s1),idioma)
+    s2=stop_words(word_tokenize(s2),idioma)
     suma=0
     for i in range(len(d1.intersection(d2))):
-        suma+=self.tf(s1[i],s1) * self.tf(s2[i],s2)
+        suma+=tf(s1[i],s1) * tf(s2[i],s2)
     return suma
 
 def norma(s,idioma):#metodo para normalizar
     s=s.lower()
-    d1=set(self.stop_words(word_tokenize(s),idioma))
-    s=self.stop_words(word_tokenize(s),idioma)
+    d1=set(stop_words(word_tokenize(s),idioma))
+    s=stop_words(word_tokenize(s),idioma)
     resultado=0
     for i in range(len(d1)):
-        resultado+=pow(self.tf(s[i],s),2)
+        resultado+=pow(tf(s[i],s),2)
     return resultado
 
 def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
@@ -380,12 +380,12 @@ def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
     if doc1 and doc2:#entrada de doc
-        s1,s2=self.leer(doc1, doc2)
+        s1,s2=leer(doc1, doc2)
     
-    if pow(self.norma(s1,idioma)*self.norma(s2,idioma),0.5) == 0:
+    if pow(norma(s1,idioma)*norma(s2,idioma),0.5) == 0:
         result = 'inf'
     else:
-        result = self.num(s1,s2,idioma)/pow(self.norma(s1,idioma)*self.norma(s2,idioma),0.5)
+        result = num(s1,s2,idioma)/pow(norma(s1,idioma)*norma(s2,idioma),0.5)
     
     return result
 
@@ -418,8 +418,8 @@ def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
     """
 
     if doc1 and doc2:#entrada por doc
-        s1,s2=self.leer(doc1, doc2)
-    d1,d2=self.preprocesamiento(s1, s2, idioma)
+        s1,s2=leer(doc1, doc2)
+    d1,d2=preprocesamiento(s1, s2, idioma)
     if d1==d2:
         return 1.0
     else:
@@ -452,8 +452,8 @@ def masi_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
     Passonneau 2006, Measuring Agreement on Set-Valued Items (MASI) for Semantic and Pragmatic Annotation.
     """
     if doc1 and doc2:#entrada por doc
-        s1,s2=self.leer(doc1, doc2)
-    d1,d2=self.preprocesamiento(s1, s2, idioma)
+        s1,s2=leer(doc1, doc2)
+    d1,d2=preprocesamiento(s1, s2, idioma)
     len_intersection = len(d1.intersection(d2))
     len_union = len(d1.union(d2))
     len_s1 = len(d1)
@@ -525,8 +525,8 @@ def jaccard_ulacia(v1=None,v2=None,doc1=None,doc2=None,idioma='english'):
         v1=input_file.read()
         v2=input_file1.read()
 
-    d1=set(self.stop_words(word_tokenize(v1),idioma))#filtrado del texto
-    d2=set(self.stop_words(word_tokenize(v2),idioma))#filtrado del texto
+    d1=set(stop_words(word_tokenize(v1),idioma))#filtrado del texto
+    d2=set(stop_words(word_tokenize(v2),idioma))#filtrado del texto
     contador=0
     
     for i in d1:   

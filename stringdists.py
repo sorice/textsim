@@ -9,23 +9,21 @@ Based on character similarity calculations.
 
 """
 
+__author__ = 'Abel Meneses-Abad, Pablo Ulacia'
+
 try:
     from jellyfish import *
 except:
     print("'jellyfish package isn't installed.")
     pass
 
-__author__ = 'Pablo'
-
-def lcs(xstr, ystr,doc1=None,doc2=None):
+def lcs(s1, s2):
     """
     Devuelve la subsecuencia mas larga
-    @param xstr, ystr: Cadenas a analizar
+    @param s1, s2: Cadenas a analizar
     @param doc1,doc2: Camino del documento a analizar
-    @type xstr: str
-    @type ystr: str
-    @type doc1: str
-    @type doc2: str
+    @type s1: str
+    @type s2: str
     @rtype str
 
     >>> s1 = 'thisisatest'
@@ -34,37 +32,31 @@ def lcs(xstr, ystr,doc1=None,doc2=None):
     True
     Longest common subsequence - Rosetta Code.htm
     """
-    
-    if doc1 and doc2:#entrada de doc
-        input_file=open(doc1,'r')
-        input_file1=open(doc2,'r')
-        xstr=input_file.read()
-        ystr=input_file1.read() 
 
-    lengths = [[0 for j in range(len(ystr)+1)] for i in range(len(xstr)+1)]
+    lengths = [[0 for j in range(len(s2)+1)] for i in range(len(s1)+1)]
     # row 0 and column 0 are initialized to 0 already
-    for i, x in enumerate(xstr):
-        for j, y in enumerate(ystr):
+    for i, x in enumerate(s1):
+        for j, y in enumerate(s2):
             if x == y:
                 lengths[i+1][j+1] = lengths[i][j] + 1
             else:
                 lengths[i+1][j+1] = max(lengths[i+1][j], lengths[i][j+1])
     # read the substring out from the matrix
     result = ""
-    x, y = len(xstr), len(ystr)
+    x, y = len(s1), len(s2)
     while x != 0 and y != 0:
         if lengths[x][y] == lengths[x-1][y]:
             x -= 1
         elif lengths[x][y] == lengths[x][y-1]:
             y -= 1
         else:
-            assert xstr[x-1] == ystr[y-1]
-            result = xstr[x-1] + result
+            assert s1[x-1] == s2[y-1]
+            result = s1[x-1] + result
             x -= 1
             y -= 1
     return result        
         
-def longlcs(s1,s2,doc1=None,doc2=None):
+def longlcs(s1,s2):
     """
     La distancia de longlcs es una medida de comparacion entre dos cadenas la
     cual va a retornar un valor int, tendiendo a n mientras mayor sea la
@@ -75,21 +67,13 @@ def longlcs(s1,s2,doc1=None,doc2=None):
     @param doc1,doc2: Camino del documento a analizar
     @type s1: str
     @type s2: str
-    @type doc1: str
-    @type doc2: str
     @rtype int
 
     >>> s1 = "jellyfish"
     >>> s2 = "smellyfishs"
     >>>longlcs(s1,s2) == 0.7272727272727273
     True
-    """
-
-    if doc1 and doc2:#entrada de doc
-        input_file=open(doc1,'r')
-        input_file1=open(doc2,'r')
-        s1=input_file.read()
-        s2=input_file1.read()                
+    """              
     
     arr=lcs(s1, s2)
 
@@ -99,7 +83,7 @@ def longlcs(s1,s2,doc1=None,doc2=None):
         tmp=len(s1)
     return float(len(arr))/tmp       
 
-def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
+def damerau_levenshtein_distance(s1, s2):
     """
     La distancia de Damerau es una medida de comparacion entre dos cadenas la
     cual va a retornar un valor int, tendiendo a 0 mientras mayor sea la
@@ -109,12 +93,9 @@ def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
     similitud.
     Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado 
     con 1 para invertir el orden a que esta tendiendo
-    @param s1, s2: Cadenas a analizar
-    @param doc1,doc2: Camino del documento a analizar
+    @param s1, s2: Cadenas a analizare
     @type s1: str
     @type s2: str
-    @type doc1: str
-    @type doc2: str
     @rtype int
 
     >>> s1 = "jellyfish"
@@ -124,11 +105,7 @@ def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
 
     Damerau-Levenshtein Distance in Python _ Guy Rutenberg.htm
     """
-    if doc1 and doc2:#entrada de doc
-        input_file=open(doc1,'r')
-        input_file1=open(doc2,'r')
-        s1=input_file.read()
-        s2=input_file1.read()  
+ 
     d = {}
     lenstr1 = len(s1)
     lenstr2 = len(s2)
@@ -158,6 +135,6 @@ def damerau_levenshtein_distance(s1, s2, doc1=None,doc2=None):
 if __name__ == '__main__':
     s1=input("Input text A:")
     s2=input("Input text B:")
-    print("La subsecuencia mas larga con el metodo LCS es", lcs(s1,s2,doc1,doc2))
-    print("La subsecuencia mas larga con el metodo LCS es de longitud es ",longlcs(s1,s2,doc1,doc2))
-    print("La respuesta de la distancia Damerau_levenshtein_distance",damerau_levenshtein_distance(s1,s2,doc1,doc2))
+    print("La subsecuencia mas larga con el metodo LCS es '%s'" % lcs(s1,s2))
+    print("LCS distance:",longlcs(s1,s2))
+    print("Damerau levenshtein distance:",damerau_levenshtein_distance(s1,s2))

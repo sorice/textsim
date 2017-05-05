@@ -65,7 +65,12 @@ from .stringdists import lcs
 from .stringdists import longlcs
 from .stringdists import damerau_levenshtein_distance
 
-__all__ = ['lcs','longlcs','damerau_levenshtein_distance']
+__all__ = [
+	'lcs',
+	'longlcs',
+	'damerau_levenshtein_distance',
+
+]
 
 from .tokendists import matching_coefficient
 from .tokendists import jaccard
@@ -79,9 +84,6 @@ from .tokendists import interval_distance
 from .tokendists import jaccard_ulacia
 
 __tokendists__ = [
-    'lcs',
-    'longlcs',
-    'damerau_levenshtein_distance',
     'matching_coefficient',
     'jaccard',
     'dice_coefficient',
