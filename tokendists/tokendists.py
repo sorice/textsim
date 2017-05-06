@@ -9,74 +9,46 @@ Based on term/token similarity calculations.
 
 """
 
-__author__ = 'Pablo'
+__author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 
-import nltk
-import math
+from ..decorators import string2tokenset, string2vec
 
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.corpus import wordnet as ws
+try:
+    from nltk.metrics import jaccard_distance as jaccard_distance_nltk
+except:
+    pass
 
-def tfidf(t, d, D):
-    tf = float(d.count(t)) / sum(d.count(w) for w in set(d))
-    idf =math.log10(float(len(D)) /(1+(len([doc for doc in D if t in doc]))))
-    return tf * idf
+try:
+    from sklearn.metrics.pairwise import manhattan_distances as manhattan_sklearn
+except:
+    pass
 
-#Obtiene un peso para un termino a traves de la frecuencia en el documento
-def tf(t,d):
-    return float(d.count(t)) / float(sum(d.count(w) for w in set(d)))
+@string2tokenset
+def jaccard_distance(s1,s2):
+    return jaccard_distance_nltk(s1,s2)
 
-#metodo auxiliar para calcular la longitud de un texto
-def len_texto(direccion_doc,idioma):
-    if direccion_doc is None:
-        return 0
-    else:
-        input_file=open(direccion_doc,'r')
-        v1=input_file.read()
-        d1=set(stop_words(word_tokenize(v1),idioma))
-        return len(d1)
-    
-#metodo para eliminar palabras vacias de un texto
-def stop_words(texto_arreglo,idioma = 'english'):
-    palabra_vacia = set(stopwords.words(idioma))
-    return [word for word in texto_arreglo if word not in palabra_vacia]
+@string2vec
+def manhattan_distance(s1,s2):
+    "Manhattan distance also known as City Block, L2, and "
+    return manhattan_sklearn(s1,s2)
 
-def preprocesamiento(s1,s2,idioma='english'):
-    c1=s1.lower()
-    c2=s2.lower()
-    d1=set(stop_words(word_tokenize(c1),idioma))#filtrado del texto
-    d2=set(stop_words(word_tokenize(c2),idioma))#filtrado del texto
-    return d1,d2
- 
-def leer(doc1,doc2):
-    input_file=open(doc1,'r')
-    input_file1=open(doc2,'r')
-    s1=input_file.read()
-    s2=input_file1.read()
-    return s1,s2 
-
-#***************************************************************************
-
-#****************************************************************************
-#similitudes basadas en terminos
-
-def matching_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
+@string2tokenset
+def matching_coefficient(s1,s2):
     """
     Medida de similitud basada en vectores. Similar a la distancia de Hamming pero
     esta debe ser entre vectores de igual longitud. Esta distancia va a devolver un
     valor entre [0-x] donde cuanto menor sea la distancia entre los vectores mas
     semejanza existira por lo que su valor tendera a 0.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
-    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado 
+    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado
     con 1 para invertir el orden a que esta tendiendo
-    
+
                    (|x|-|x∩y|)
     M(x,y) = 1 -  -----------------
                    max_longitud(x,y)
-    
+
     @param x, y: Cadenas a analizar
     @param doc1, doc2: Direccion de los archivos a analizar
     @param idioma: Idioma del contenido que se le esta pasando
@@ -96,26 +68,18 @@ def matching_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    #Condicion necesaria para el algoritmo los vectores deben ser de la misma longitud, utiliza un metodo auxiliar
-    if doc1 and doc2:#entrada de doc
-        s1,s2=leer(doc1, doc2)
-    d1,d2=preprocesamiento(s1, s2, idioma)
-    if len(d1)==len(d2):#condicion para ver si los doc tienen la misma longitud
-        interseccion=d1.intersection(d2)
-        return float(1-((float(len(d1))-float(len(interseccion))))/len(d1))
-    else:
-        msg= "La distancia entre los dos vectores debe ser la misma"
-        return msg
-    
+    maxlen = float(max(len(s1),len(s2)))
+    return 1-(maxlen -len(s1.intersection(s2)))/maxlen
+
 def jaccard(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     """
     La medida de Jaccard es una medida de similitud que va a tender a 1 mientras mas
     semejanza exista entre dos vectores y el rango de su resultado va estar entre [0-1]
-    
+
                     |X ∩ Y|
     jaccard(X,Y) = -----------
                     |X ∪ Y|
-    
+
     @param x, y: Cadenas a analizar
     @param doc1, doc2: Direccion de los archivos a analizar
     @param idioma: Idioma del contenido que se le esta pasando
@@ -190,7 +154,7 @@ def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
                 |X ∩ Y|
     OC(x,y)= ---------------
               min(|x|,|y|)
-              
+
     @param x, y: Cadenas a analizar
     @param doc1, doc2: Direccion de los archivos a analizar
     @param idioma: Idioma del contenido que se le esta pasando
@@ -217,7 +181,7 @@ def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
         result = 'inf'
     else:
         result = float(len(d1.intersection(d2)))/float(min(len(d1),len(d2)))
-    
+
     return result
 
 def euclidean(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
@@ -226,14 +190,14 @@ def euclidean(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     semejantes son los vectores. Esta medida utiliza el metodo tf para asignarle un peso a las palabras
     de acuerdo a la frecuencia.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
     Esta operacion se realizo  restando el resultado con 1 para invertir el orden a que esta tendiendo
 
                                ₂
-    euclidean(x,y)= ⎷∑ |x - y | 
+    euclidean(x,y)= ⎷∑ |x - y |
                       i  i   i
-    
+
     @param x, y: Cadenas a analizar
     @param doc1, doc2: Direccion de los archivos a analizar
     @param idioma: Idioma del contenido que se le esta pasando
@@ -289,14 +253,14 @@ def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
     semejantes son los vectores. Esta medida utiliza el metodo tf para asignarle
     un peso a las palabras de acuerdo a la frecuencia.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
     Esta operacion se realizo restando el resultado con 1 para invertir el orden a que esta tendiendo
-    
+
                                ₂
-    manhattan(x,y)=  ∑ |x - y | 
+    manhattan(x,y)=  ∑ |x - y |
                       i  i   i
-    
+
     @param x, y: Cadenas a analizar
     @param doc1, doc2: Direccion de los archivos a analizar
     @param idioma: Idioma del contenido que se le esta pasando
@@ -316,7 +280,7 @@ def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    
+
     if not isinstance(s1, str) or not isinstance(s2, str):
         raise TypeError('Data values must be string type.')
 
@@ -381,12 +345,12 @@ def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     """
     if doc1 and doc2:#entrada de doc
         s1,s2=leer(doc1, doc2)
-    
+
     if pow(norma(s1,idioma)*norma(s2,idioma),0.5) == 0:
         result = 'inf'
     else:
         result = num(s1,s2,idioma)/pow(norma(s1,idioma)*norma(s2,idioma),0.5)
-    
+
     return result
 
 def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
@@ -394,7 +358,7 @@ def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
 
     0.0 if the labels are identical, 1.0 if they are different.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
     Esta operacion se realizo restando el resultado con 1 para invertir el orden a que esta tendiendo
 
@@ -424,12 +388,12 @@ def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
         return 1.0
     else:
         return 0.0
-    
+
 def masi_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
     """Distance metric that takes into account partial agreement when multiple
     labels are assigned.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
     Esta operacion se realizo restando el resultado con 1 para invertir el orden a que esta tendiendo
 
@@ -466,12 +430,12 @@ def masi_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
         m = 0.33
     else:
         m = 0
-    
+
     if float(len_union)*m == 0:
         result = 'inf'
     else:
         result = 1-(float(len_intersection)/float(len_union))*m
-        
+
     return result
 
 def interval_distance(label1,label2):
@@ -528,12 +492,12 @@ def jaccard_ulacia(v1=None,v2=None,doc1=None,doc2=None,idioma='english'):
     d1=set(stop_words(word_tokenize(v1),idioma))#filtrado del texto
     d2=set(stop_words(word_tokenize(v2),idioma))#filtrado del texto
     contador=0
-    
-    for i in d1:   
+
+    for i in d1:
         for j in d2:
-            try: 
+            try:
                 tmp1=ws.synsets(i)[0]
-                tmp2=ws.synsets(j)[0]                        
+                tmp2=ws.synsets(j)[0]
                 similitud=tmp1.wup_similarity(tmp2)
                 similitud2=tmp1.path_similarity(tmp2)
                 if similitud>=similitud2:
@@ -549,15 +513,15 @@ def jaccard_ulacia(v1=None,v2=None,doc1=None,doc2=None,idioma='english'):
                 else:
                     tmp=float(damerau_levenshtein_distance(i, j, doc1, doc2))
                 if tmp<0.3:
-                    contador+=1 
-                    break          
-                    
+                    contador+=1
+                    break
+
     if float(len(d1.union(d2))) == 0:
         result = 'inf'
     else:
         result = contador/float(len(d1.union(d2)))
     return result
-                   
+
 def fractional_presence(label):
     return lambda x, y:\
         abs((float(1.0 / len(x)) - float(1.0 / len(y)))) * (label in x and label in y) \

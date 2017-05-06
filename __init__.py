@@ -4,7 +4,7 @@ Text Similarity Measures for Python
 
 textsim is a Python module integrating classical distances for text
 similarity evaluation. The library reuse well known implementations
-of Gensim, NLTK and other classical python libraries for text 
+of Gensim, NLTK and other classical python libraries for text
 processing.
 
 It aims to provide simple solutions to text similarity problems.
@@ -22,7 +22,7 @@ __version__ = '0.1'
 __copyright__ = """\
 Copyright (C) 2017-2020 QtNLP Project.
 
-Distributed and Licensed under the BSD License, Version X.X and 
+Distributed and Licensed under the BSD License, Version X.X and
 LTPL License, Version 1.0, which are included by reference.
 """
 __license__ = "BSD License, Version X.X and LTPL License, Version 1.0"
@@ -62,4 +62,4 @@ __classifiers__ = [
 ]
 
 from textsim.stringdists import *
-from textsim import tokendists
+from textsim.tokendists import *
