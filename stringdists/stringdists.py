@@ -13,21 +13,18 @@ __author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 
 try:
     from nltk.metrics import edit_distance as edit_distance_nltk
+    from nltk.metrics import binary_distance as binary_distance_nltk
 except:
     pass
 
-
-JellyfishImportError = False
 try:
-    from jellyfish import *
+    from .jellyfish import levenshtein_distance as levenshtein_distance_jellyfish
 except:
-    JellyfishImportError = True
-    print("Some stringdists will not be available due to Jellyfish package isn't installed.")
     pass
-finally:
-    print('JellyfishImportError', JellyfishImportError)
 
 from ..decorators import score_original
+
+from .swalign import NucleotideScoringMatrix, LocalAlignment
 
 def lcs(s1, s2):
     """
@@ -68,7 +65,7 @@ def lcs(s1, s2):
             y -= 1
     return result
 
-def longlcs(s1,s2):
+def lcs_distance(s1,s2):
     """
     La distancia de longlcs es una medida de comparacion entre dos cadenas la
     cual va a retornar un valor int, tendiendo a n mientras mayor sea la
@@ -95,7 +92,7 @@ def longlcs(s1,s2):
         tmp=len(s1)
     return float(len(arr))/tmp
 
-def damerau_levenshtein_distance(s1, s2):
+def damerau_levenshtein_distance_textsim(s1, s2):
     """
     La distancia de Damerau es una medida de comparacion entre dos cadenas la
     cual va a retornar un valor int, tendiendo a 0 mientras mayor sea la
@@ -148,6 +145,24 @@ def damerau_levenshtein_distance(s1, s2):
 @score_original
 def edit_distance(s1,s2):
     return edit_distance_nltk(s1,s2)
+
+def binary_distance(s1,s2):
+    if binary_distance_nltk(s1,s2):
+        return 0.0
+    else:
+        return 1.0
+
+@score_original
+def levenshtein_distance(s1,s2):
+    return levenshtein_distance_jellyfish(s1,s2)
+
+def smith_waterman_distance(s1,s2):
+    match = 2
+    mismatch = -1
+    scoring = NucleotideScoringMatrix(match, mismatch)
+    sw = LocalAlignment(scoring)
+    tmp=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
+    return float(sw.align(s1,s2).matches)/tmp
 
 if __name__ == '__main__':
     s1=input("Input text A:")
