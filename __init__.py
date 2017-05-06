@@ -62,4 +62,4 @@ __classifiers__ = [
 ]
 
 from textsim.stringdists import *
-from textsim.tokendists import *
+from textsim import tokendists

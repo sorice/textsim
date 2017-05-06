@@ -12,21 +12,20 @@ Based on character similarity calculations.
 __author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 
 try:
-    from jellyfish import *
+    from nltk.metrics import edit_distance as edit_distance_nltk
 except:
-    print("'jellyfish package isn't installed.")
     pass
 
-#Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators
-importError = False
+
+JellyfishImportError = False
 try:
-    import nltk
-except ImportError:
-    print('NLTK package most be instaled for some stringdists.')
+    from jellyfish import *
+except:
+    JellyfishImportError = True
+    print("Some stringdists will not be available due to Jellyfish package isn't installed.")
     pass
 finally:
-    if not importError:
-        from nltk.metrics import edit_distance as edit_distance_nltk
+    print('JellyfishImportError', JellyfishImportError)
 
 from ..decorators import score_original
 
@@ -67,8 +66,8 @@ def lcs(s1, s2):
             result = s1[x-1] + result
             x -= 1
             y -= 1
-    return result        
-        
+    return result
+
 def longlcs(s1,s2):
     """
     La distancia de longlcs es una medida de comparacion entre dos cadenas la
@@ -86,15 +85,15 @@ def longlcs(s1,s2):
     >>> s2 = "smellyfishs"
     >>>longlcs(s1,s2) == 0.7272727272727273
     True
-    """              
-    
+    """
+
     arr=lcs(s1, s2)
 
     if s1<s2:
         tmp=len(s2)
     else:
         tmp=len(s1)
-    return float(len(arr))/tmp       
+    return float(len(arr))/tmp
 
 def damerau_levenshtein_distance(s1, s2):
     """
@@ -102,9 +101,9 @@ def damerau_levenshtein_distance(s1, s2):
     cual va a retornar un valor int, tendiendo a 0 mientras mayor sea la
     semejanza.
     En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor 
+    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
     similitud.
-    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado 
+    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado
     con 1 para invertir el orden a que esta tendiendo
     @param s1, s2: Cadenas a analizare
     @type s1: str
@@ -118,7 +117,7 @@ def damerau_levenshtein_distance(s1, s2):
 
     Damerau-Levenshtein Distance in Python _ Guy Rutenberg.htm
     """
- 
+
     d = {}
     lenstr1 = len(s1)
     lenstr2 = len(s2)
@@ -140,11 +139,12 @@ def damerau_levenshtein_distance(s1, s2):
                             )
             if i and j and s1[i]==s2[j-1] and s1[i-1] == s2[j]:
                 d[(i,j)] = min (d[(i,j)], d[i-2,j-2] + cost) # transposition
-    
+
     lengthmax = max(s1.__len__(), s2.__len__())
 
     return 1-float(float(d[lenstr1-1,lenstr2-1])/lengthmax)
 
+# if not NLTKImportError:
 @score_original
 def edit_distance(s1,s2):
     return edit_distance_nltk(s1,s2)
