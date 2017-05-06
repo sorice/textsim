@@ -164,6 +164,36 @@ def smith_waterman_distance(s1,s2):
     tmp=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
     return float(sw.align(s1,s2).matches)/tmp
 
+def needleman_wunch(s1, s2, gap_cost=2):
+    if isinstance(s1, bytes) or isinstance(s2, bytes):
+        raise TypeError(_no_bytes_err)
+
+    if s1 == s2:
+        return 0
+    rows = len(s1)+1
+    cols = len(s2)+1
+
+    if not s1:
+        return cols-1
+    if not s2:
+        return rows-1
+
+    prev = None
+    cur = range(cols)
+    for r in range(1, rows):
+        prev, cur = cur, [r] + [0]*(cols-1)
+        for c in range(1, cols):
+            deletion = prev[c] + gap_cost
+            insertion = cur[c-1] + gap_cost
+            edit = prev[c-1] + (0 if s1[r-1] == s2[c-1] else gap_cost)
+            cur[c] = min(edit, deletion, insertion)
+
+    return cur[-1]
+
+@score_original
+def needleman_wunch_distance(s1,s2):
+    return needleman_wunch(s1,s2)
+
 if __name__ == '__main__':
     s1=input("Input text A:")
     s2=input("Input text B:")

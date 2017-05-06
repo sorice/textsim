@@ -1,12 +1,16 @@
 from .stringdists import (lcs, lcs_distance,
                             damerau_levenshtein_distance_textsim,
-                            smith_waterman_distance)
+                            smith_waterman_distance,
+                            needleman_wunch,
+                            needleman_wunch_distance)
 
 __distances__ = [
 	'lcs',
 	'lcs_distance',
 	'damerau_levenshtein_distance_textsim',
     'smith_waterman_distance',
+    'needleman_wunch',
+    'needleman_wunch_distance',
 ]
 
 #Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -78,7 +82,6 @@ for distance in __distances__:
 	__all__.append(distance)
 
 __not_implemented__ = [
-    'Neeldman-Wunch distance',
     'Gotoh distance',
     'Monge Elkan distance',
 ]
