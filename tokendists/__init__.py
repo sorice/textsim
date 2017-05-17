@@ -1,5 +1,5 @@
 from .tokendists import matching_coefficient
-# from .tokendists import jaccard
+from .tokendists import jaccard_distance_textsim
 # from .tokendists import dice_coefficient
 # from .tokendists import overlap
 # from .tokendists import euclidean
@@ -11,7 +11,7 @@ from .tokendists import matching_coefficient
 
 __distances__ = [
     'matching_coefficient',
-    # 'jaccard',
+    'jaccard_distance_textsim',
     # 'dice_coefficient',
     # 'overlap',
     # 'euclidean',
@@ -32,11 +32,12 @@ except ImportError:
     pass
 finally:
     if not NLTKImportError:
-        from .tokendists import (jaccard_distance)
+        from .tokendists import (jaccard_distance, masi_distance, interval_distance)
 
         __nltk_distances__ = [
             'jaccard_distance',
-            # 'binary_distance',
+             'masi_distance',
+             'interval_distance',
         ]
 
         for distance in __nltk_distances__:
@@ -52,6 +53,17 @@ finally:
 	if not SklearnImportError:
 		from .tokendists import manhattan_distance as manhattan_distance_sklearn
 		__distances__.append('manhattan_distance_sklearn')
+
+ScipyImportError = False
+try:
+    import scipy
+except ImportError:
+    print("Some tokendists will not be available due to Scipy package isn't installed.")
+    pass
+finally:
+    if not ScipyImportError:
+        from .tokendists import jaccard_distance_scipy
+        __distances__.append('jaccard_distance_scipy')
 
 # append all verified distances in module importing argument ALL
 __all__ = []

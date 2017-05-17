@@ -15,11 +15,18 @@ from ..decorators import string2tokenset, string2vec
 
 try:
     from nltk.metrics import jaccard_distance as jaccard_distance_nltk
+    from nltk.metrics import masi_distance as masi_distance_nltk
+    from nltk.metrics import interval_distance as interval_distance_nltk
 except:
     pass
 
 try:
     from sklearn.metrics.pairwise import manhattan_distances as manhattan_sklearn
+except:
+    pass
+
+try:
+    from scipy.spatial.distance import jaccard as jaccard_scipy
 except:
     pass
 
@@ -31,6 +38,21 @@ def jaccard_distance(s1,s2):
 def manhattan_distance(s1,s2):
     "Manhattan distance also known as City Block, L2, and "
     return manhattan_sklearn(s1,s2)
+
+@string2vec
+def jaccard_distance_scipy(s1,s2):
+    "Manhattan distance also known as City Block, L2, and "
+    return jaccard_scipy(s1,s2)
+
+@string2tokenset
+def masi_distance(s1,s2):
+    "Masi distance "
+    return masi_distance_nltk(s1,s2)
+
+@string2tokenset
+def interval_distance(s1,s2):
+    "Masi distance."
+    return interval_distance_nltk(s1.__len__(),s2.__len__())
 
 @string2tokenset
 def matching_coefficient(s1,s2):
@@ -49,14 +71,9 @@ def matching_coefficient(s1,s2):
     M(x,y) = 1 -  -----------------
                    max_longitud(x,y)
 
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
+    @param s1, s2: Cadenas a analizar
+    @type s1: str
+    @type s2: str
     @rtype: float
 
     >>> x = "0.1 0.2 0.3 0.4"
@@ -71,7 +88,8 @@ def matching_coefficient(s1,s2):
     maxlen = float(max(len(s1),len(s2)))
     return 1-(maxlen -len(s1.intersection(s2)))/maxlen
 
-def jaccard(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
+@string2tokenset
+def jaccard_distance_textsim(s1,s2):
     """
     La medida de Jaccard es una medida de similitud que va a tender a 1 mientras mas
     semejanza exista entre dos vectores y el rango de su resultado va estar entre [0-1]
@@ -80,14 +98,9 @@ def jaccard(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     jaccard(X,Y) = -----------
                     |X ∪ Y|
 
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
+    @param s1, s2: Cadenas a analizar
+    @type s1: str
+    @type s2: str
     @rtype: float
 
     >>> x = "0.1 0.2 0.3 0.4"
@@ -98,18 +111,16 @@ def jaccard(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    if doc1 and doc2:#entrada de doc
-        s1,s2=leer(doc1, doc2)
-    d1,d2=preprocesamiento(s1, s2, idioma)
-    c1 = d1 & d2
-    c2 = d1 | d2
+    c1 = s1 & s2
+    c2 = s1 | s2
     if len(c2) == 0:
         result = 'inf'
     else:
-        result = float(len(c1))/float(len(c2))
+        result = float(abs(len(c1)-len(c2)))/len(c2)
     return result
 
-def dice_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
+@string2tokenset
+def dice_coefficient(s1,s2):
     """
     La medida de Dice_coefficient (similar a Jaccard) es una medida de similitud que va
     a tender a 2 mientras mas semejanza exista entre dos vectores y el rango de su
@@ -119,14 +130,9 @@ def dice_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     dice(X,Y) = -----------
                      |X|+|Y|
 
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
+    @param s1, s2: Cadenas a analizar
+    @type s1: str
+    @type s2: str
     @rtype: float
 
     >>> x = "0.1 0.2 0.3 0.4"
@@ -138,13 +144,11 @@ def dice_coefficient(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    if doc1 and doc2:#entrada de doc
-        s1,s2=leer(doc1,doc2)
-    d1,d2=preprocesamiento(s1,s2)
-    c1 = d1 & d2
-    c2 = d1 | d2
+    c1 = s1 & s2
+    c2 = s1 | s2
     return 2*(float(len(c1)))/(float(len(c2))+float(len(c2)))
 
+@string2tokenset
 def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     """
     Overlap es una medida que tiende a 1 mientras mayor sea la semejanza entre los
@@ -155,14 +159,9 @@ def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     OC(x,y)= ---------------
               min(|x|,|y|)
 
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
+    @param s1, s2: Cadenas a analizar
+    @type s1: str
+    @type s2: str
     @rtype: float
 
     >>> x = "0.1 0.2 0.3 0.4"
@@ -174,13 +173,11 @@ def overlap(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    if doc1 and doc2:#entrada de doc
-        s1,s2=leer(doc1, doc2)
-    d1,d2=preprocesamiento(s1, s2, idioma)
-    if float(min(len(d1),len(d2))) == 0:
+
+    if float(min(len(s1),len(s2))) == 0:
         result = 'inf'
     else:
-        result = float(len(d1.intersection(d2)))/float(min(len(d1),len(d2)))
+        result = float(len(s1.intersection(s2)))/float(min(len(s1),len(s2)))
 
     return result
 
@@ -217,35 +214,19 @@ def euclidean(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
     Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
     Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    try:#entrada de doc
-        s1,s2=leer(doc1, doc2)
-        s1=sw.lower()
-        s2=s2.lower()
-        d1=set(stop_words(word_tokenize(s1),idioma))#filtrado del texto
-        d2=set(stop_words(word_tokenize(s2),idioma))#filtrado del texto
-        suma=0
-        if len(s1)<len(s2):#Para ver hasta donde recorrer que no se vaya de rango las iteraciones
-            for i in range(len(d1)):
-                suma+=pow(tf(d1[i],d1) - tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
-            return float(1-float(pow(suma,0.5)))
-        else:
-            for i in range(len(d2)):
-                suma+=pow(tf(d1[i],d1) - tf(d2[i],d2),2)#tf es una funcion que un peso a la variable de acuerdo a su frecuencia en el doc
-            return float(1-float(pow(suma,0.5)))
-    finally:#entrada de cadenas
-        s1=s1.lower()
-        s2=s2.lower()
-        s1=stop_words(word_tokenize(s1),idioma)
-        s2=stop_words(word_tokenize(s2),idioma)
-        suma=0
-        if len(s1)<len(s2):
-            for i in range(len(s1)):
-                suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-            return float(1-float(pow(suma,0.5)))
-        else:
-            for i in range(len(s2)):
-                suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-            return float(1-float(pow(suma,0.5)))
+
+    s1=s1.lower()
+    s2=s2.lower()
+
+    suma=0
+    if len(s1)<len(s2):
+        for i in range(len(s1)):
+            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
+        return float(1-float(pow(suma,0.5)))
+    else:
+        for i in range(len(s2)):
+            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
+        return float(1-float(pow(suma,0.5)))
 
 def manhattan(s1,s2,doc1=None,doc2=None,idioma='english'):
     """
@@ -317,7 +298,7 @@ def norma(s,idioma):#metodo para normalizar
         resultado+=pow(tf(s[i],s),2)
     return resultado
 
-def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
+def cos(s1,s2,idioma='english'):
     """
     La distancia de Coseno es una distancia que tiende a 1 mientras mas
     semejantes son los vectores y su valor se encuentra entre [0-1].
@@ -352,108 +333,6 @@ def cos(s1=None,s2=None,doc1=None,doc2=None,idioma='english'):
         result = num(s1,s2,idioma)/pow(norma(s1,idioma)*norma(s2,idioma),0.5)
 
     return result
-
-def binary_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
-    """Simple equality test.
-
-    0.0 if the labels are identical, 1.0 if they are different.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
-    similitud.
-    Esta operacion se realizo restando el resultado con 1 para invertir el orden a que esta tendiendo
-
-    >>> from nltk.metrics import binary_distance
-
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
-    @rtype float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> binary_distance(x, y, "", "",idioma) == 0.0
-    True
-    """
-
-    if doc1 and doc2:#entrada por doc
-        s1,s2=leer(doc1, doc2)
-    d1,d2=preprocesamiento(s1, s2, idioma)
-    if d1==d2:
-        return 1.0
-    else:
-        return 0.0
-
-def masi_distance(s1=None, s2=None, doc1=None,doc2=None,idioma='english'):
-    """Distance metric that takes into account partial agreement when multiple
-    labels are assigned.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
-    similitud.
-    Esta operacion se realizo restando el resultado con 1 para invertir el orden a que esta tendiendo
-
-    @param x, y: Cadenas a analizar
-    @param doc1, doc2: Direccion de los archivos a analizar
-    @param idioma: Idioma del contenido que se le esta pasando
-    @type x: str
-    @type y: str
-    @type doc1: str
-    @type doc2: str
-    @type idioma: str
-    @rtype: float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> masi_distance(x, y, "", "",idioma) == 0.802
-    True
-
-    Passonneau 2006, Measuring Agreement on Set-Valued Items (MASI) for Semantic and Pragmatic Annotation.
-    """
-    if doc1 and doc2:#entrada por doc
-        s1,s2=leer(doc1, doc2)
-    d1,d2=preprocesamiento(s1, s2, idioma)
-    len_intersection = len(d1.intersection(d2))
-    len_union = len(d1.union(d2))
-    len_s1 = len(d1)
-    len_s2 = len(d2)
-    if len_s1 == len_s2 and len_s1 == len_intersection:
-        m = 1
-    elif len_intersection == min(len_s1, len_s2):
-        m = 0.67
-    elif len_intersection > 0:
-        m = 0.33
-    else:
-        m = 0
-
-    if float(len_union)*m == 0:
-        result = 'inf'
-    else:
-        result = 1-(float(len_intersection)/float(len_union))*m
-
-    return result
-
-def interval_distance(label1,label2):
-    """Krippendorff's interval distance metric
-
-    >>> from nltk.metrics import interval_distance
-    >>> interval_distance(1,10)
-    81
-
-    Krippendorff 1980, Content Analysis: An Introduction to its Methodology
-    """
-
-    try:
-        return pow(label1 - label2, 2)
-#        return pow(list(label1)[0]-list(label2)[0],2)
-    except:
-        print("non-numeric labels not supported with interval distance")
-
 
 def presence(label):
     """Higher-order function to test presence of a given label
