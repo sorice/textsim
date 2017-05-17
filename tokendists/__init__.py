@@ -1,24 +1,16 @@
 from .tokendists import matching_coefficient
 from .tokendists import jaccard_distance_textsim
-# from .tokendists import dice_coefficient
-# from .tokendists import overlap
-# from .tokendists import euclidean
-# from .tokendists import manhattan
-# from .tokendists import binary_distance
-# from .tokendists import masi_distance
-# from .tokendists import interval_distance
+from .tokendists import dice_coefficient_textsim
+from .tokendists import overlap_distance_textsim
+from .tokendists import euclidean_distance_textsim
 # from .tokendists import jaccard_ulacia
 
 __distances__ = [
     'matching_coefficient',
     'jaccard_distance_textsim',
-    # 'dice_coefficient',
-    # 'overlap',
-    # 'euclidean',
-    # 'manhattan',
-    # 'binary_distance',
-    # 'masi_distance',
-    # 'interval_distance',
+    'dice_coefficient_textsim',
+    'overlap_distance_textsim',
+    'euclidean_distance_textsim',
     # 'jaccard_ulacia',
 ]
 
@@ -45,14 +37,18 @@ finally:
 
 SklearnImportError = False
 try:
-	import sklearn
+    import sklearn
 except ImportError:
-	print("Some tokendists will not be available due to Sklearn package isn't installed.")
-	pass
+    print("Some tokendists will not be available due to Sklearn package isn't installed.")
+    pass
 finally:
-	if not SklearnImportError:
-		from .tokendists import manhattan_distance as manhattan_distance_sklearn
-		__distances__.append('manhattan_distance_sklearn')
+    if not SklearnImportError:
+        from .tokendists import manhattan_distance as manhattan_distance_sklearn
+        from .tokendists import cosine_distance as cosine_distance_sklearn
+        from .tokendists import euclidean_distance as euclidean_distance_sklearn
+        __distances__.append('manhattan_distance_sklearn')
+        __distances__.append('cosine_distance_sklearn')
+        __distances__.append('euclidean_distances_sklearn')
 
 ScipyImportError = False
 try:

@@ -15,6 +15,8 @@ def score_original(func):
 
 def string2tokenset(func):
     def inner(s1,s2):
+        s1 = s1.lower()
+        s2 = s2.lower()
         s1 = set([word for word in s1.split()])
         s2 = set([word for word in s2.split()])
         result = func(s1,s2)
