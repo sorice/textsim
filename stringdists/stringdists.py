@@ -22,7 +22,7 @@ try:
 except:
     pass
 
-from ..decorators import score_original
+from ..decorators import score_original, Appender
 
 from .swalign import NucleotideScoringMatrix, LocalAlignment
 
@@ -154,6 +154,9 @@ def binary_distance(s1,s2):
 
 @score_original
 def levenshtein_distance(s1,s2):
+    """The minimum edit(operations) distance which transforms string1 into string2.
+    Similar to Needleman-Wunch but with G=1
+    """
     return levenshtein_distance_jellyfish(s1,s2)
 
 def smith_waterman_distance(s1,s2):
@@ -165,6 +168,11 @@ def smith_waterman_distance(s1,s2):
     return float(sw.align(s1,s2).matches)/tmp
 
 def needleman_wunch(s1, s2, gap_cost=2):
+    """The minimum edit (operations) distance which transforms string1 into string2.
+
+    D(i,j) = min (deletion, insertion, edit)
+    """
+
     if isinstance(s1, bytes) or isinstance(s2, bytes):
         raise TypeError(_no_bytes_err)
 
@@ -190,8 +198,12 @@ def needleman_wunch(s1, s2, gap_cost=2):
 
     return cur[-1]
 
+
 @score_original
+@Appender(needleman_wunch.__doc__)
 def needleman_wunch_distance(s1,s2):
+    """Esto es el texto inicial.
+    """
     return needleman_wunch(s1,s2)
 
 if __name__ == '__main__':
