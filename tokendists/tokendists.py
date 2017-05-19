@@ -29,12 +29,43 @@ except:
 
 try:
     from scipy.spatial.distance import jaccard as jaccard_scipy
+    from scipy.spatial.distance import braycurtis as braycurtis_scipy
+    from scipy.spatial.distance import canberra as canberra_scipy
+    from scipy.spatial.distance import chebyshev as chebyshev_scipy
+    from scipy.spatial.distance import correlation as correlation_scipy
+    from scipy.spatial.distance import dice as dice_scipy
+    from scipy.spatial.distance import hamming as hamming_scipy
+    from scipy.spatial.distance import kulsinski as kulsinski_scipy
+    from scipy.spatial.distance import mahalanobis as mahalanobis_scipy
+    from scipy.spatial.distance import matching as matching_scipy
+    from scipy.spatial.distance import minkowski as minkowski_scipy
+    from scipy.spatial.distance import rogerstanimoto as rogerstanimoto_scipy
+    from scipy.spatial.distance import russellrao as russellrao_scipy
+    from scipy.spatial.distance import seuclidean as seuclidean_scipy
+    from scipy.spatial.distance import sokalmichener as sokalmichener_scipy
+    from scipy.spatial.distance import sokalsneath as sokalsneath_scipy
+    from scipy.spatial.distance import sqeuclidean as sqeuclidean_scipy
+    from scipy.spatial.distance import yule as yule_scipy
 except:
     pass
+
+import numpy as np
+from scipy.spatial.distance import (_copy_arrays_if_base_present,
+                                    _convert_to_double)
 
 @string2tokenset
 def jaccard_distance(s1,s2):
     return jaccard_distance_nltk(s1,s2)
+
+@string2tokenset
+def masi_distance(s1,s2):
+    "Masi distance "
+    return masi_distance_nltk(s1,s2)
+
+@string2tokenset
+def interval_distance(s1,s2):
+    "Interval distance."
+    return float(interval_distance_nltk(s1.__len__(),s2.__len__()))
 
 @string2vec
 def manhattan_distance(s1,s2):
@@ -56,15 +87,98 @@ def jaccard_distance_scipy(s1,s2):
     "Jaccard distance also known as Tanimoto distance."
     return jaccard_scipy(s1,s2)
 
-@string2tokenset
-def masi_distance(s1,s2):
-    "Masi distance "
-    return masi_distance_nltk(s1,s2)
+@string2vec
+def braycurtis_distance_scipy(s1,s2):
+    ""
+    return braycurtis_scipy(s1,s2)
 
-@string2tokenset
-def interval_distance(s1,s2):
-    "Interval distance."
-    return interval_distance_nltk(s1.__len__(),s2.__len__())
+@string2vec
+def canberra_distance_scipy(s1,s2):
+    ""
+    return canberra_scipy(s1,s2)
+
+@string2vec
+def chebyshev_distance_scipy(s1,s2):
+    ""
+    return chebyshev_scipy(s1,s2)
+
+@string2vec
+def correlation_distance_scipy(s1,s2):
+    ""
+    return correlation_scipy(s1,s2)
+
+@string2vec
+def dice_distance_scipy(s1,s2):
+    ""
+    return dice_scipy(s1,s2)
+
+@string2vec
+def hamming_distance_scipy(s1,s2):
+    ""
+    return hamming_scipy(s1,s2)
+
+@string2vec
+def kulsinski_distance_scipy(s1,s2):
+    ""
+    return kulsinski_scipy(s1,s2)
+
+@string2vec
+def mahalanobis_distance_scipy(s1,s2):
+    ""
+    [XA] = _copy_arrays_if_base_present([_convert_to_double(s1)])
+    [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
+    X = np.vstack([XA, XB])
+    VI = np.cov(X.T)
+    return mahalanobis_scipy(s1,s2,VI)
+
+@string2vec
+def matching_distance_scipy(s1,s2):
+    ""
+    return matching_scipy(s1,s2)
+
+@string2vec
+def minkowski_distance_scipy(s1,s2):
+    ""
+    return minkowski_scipy(s1,s2, p=1)
+
+@string2vec
+def rogerstanimoto_distance_scipy(s1,s2):
+    ""
+    return rogerstanimoto_scipy(s1,s2)
+
+@string2vec
+def russellrao_distance_scipy(s1,s2):
+    ""
+    return russellrao_scipy(s1,s2)
+
+@string2vec
+def seuclidean_distance_scipy(s1,s2):
+    ""
+    [XA] = _copy_arrays_if_base_present([_convert_to_double(s1)])
+    [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
+    X = np.vstack([XA, XB])
+    V = np.var(X, axis=0, ddof=1)
+    return np.nansum(np.sqrt(((XA - XB) ** 2 / V)))
+
+@string2vec
+def sokalmichener_distance_scipy(s1,s2):
+    ""
+    return sokalmichener_scipy(s1,s2)
+
+@string2vec
+def sokalsneath_distance_scipy(s1,s2):
+    ""
+    return sokalsneath_scipy(s1,s2)
+
+@string2vec
+def sqeuclidean_distance_scipy(s1,s2):
+    ""
+    return sqeuclidean_scipy(s1,s2)
+
+@string2vec
+def yule_distance_scipy(s1,s2):
+    ""
+    return yule_scipy(s1,s2)
 
 @string2tokenset
 def matching_coefficient(s1,s2):
