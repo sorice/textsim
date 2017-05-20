@@ -27,6 +27,7 @@ def string2tokenset(func):
     return inner
 
 def string2vec(func):
+    @wraps(func)
     def inner(s1,s2):
         if isinstance(s1,str) and isinstance(s2,str):
             s1,s2 = string2vector(s1,s2)

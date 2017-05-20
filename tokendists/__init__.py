@@ -103,6 +103,11 @@ for distance in PAIRED_DISTANCES:
     __all__.append(distance)
 
 __not_implemented__ = [
-    # 'Gotoh distance',
-    # 'Monge Elkan distance',
+    'Kullback-Leibler distance',  #test later from scipy.special import kl_div
+    'Hellinger distance',
+    'Jensen Shanon divergence',
+    'Harmonic Mean distance',     #se puede implementar usando numpy
+    'Skew divergence',
+    'Tau distance',
+    'Q-gram distance',            #se puede implementar fácil
 ]
