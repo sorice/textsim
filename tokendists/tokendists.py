@@ -158,7 +158,7 @@ def seuclidean_distance_scipy(s1,s2):
     [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
     X = np.vstack([XA, XB])
     V = np.var(X, axis=0, ddof=1)
-    return np.nansum(np.sqrt(((XA - XB) ** 2 / V)))
+    return np.nansum(np.sqrt((XA - XB) ** 2 / V))
 
 @string2vec
 def sokalmichener_distance_scipy(s1,s2):
@@ -354,56 +354,6 @@ def euclidean_distance_textsim(s1,s2):
 def tf(t,d):
     return float(d.count(t)) / float(sum(d.count(w) for w in set(d)))
 
-@string2tokenset
-def jaccard_ulacia(s1,s2):
-    """Modificacion de la medida Jaccard utilizando wordnet para expandir la busqueda
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    >>> import nltk
-    >>> from nltk.tokenize import word_tokenize
-    >>> from nltk.corpus import stopwords
-    >>> from nltk.corpus import wordnet as ws
-    >>> x = "my house is pretty"
-    >>> y = "the house my is pretty"
-    >>> jaccard_ulacia(x, y) == 1
-    True
-    """
-
-    contador=0
-
-    for i in s1:
-        for j in s2:
-            try:
-                tmp1=ws.synsets(i)[0]
-                tmp2=ws.synsets(j)[0]
-                similitud=tmp1.wup_similarity(tmp2)
-                similitud2=tmp1.path_similarity(tmp2)
-                if similitud>=similitud2:
-                    tmp=similitud
-                else:
-                    tmp=similitud2
-                if tmp>0.75:
-                    contador+=1
-                    break
-            except:
-                if len(i)<len(j):
-                    tmp=float(damerau_levenshtein_distance(i, j, doc1, doc2))
-                else:
-                    tmp=float(damerau_levenshtein_distance(i, j, doc1, doc2))
-                if tmp<0.3:
-                    contador+=1
-                    break
-
-    if float(len(s1.union(s2))) == 0:
-        result = 'inf'
-    else:
-        result = contador/float(len(s1.union(s2)))
-    return result
-
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."
         v2="Current Chief Operating Officer Mike Butcher and Group Chief Financial Officer Alex Arena will report to So."
@@ -416,4 +366,4 @@ if __name__ == '__main__':
         print("Cosine distance:",cos("0.1 0.2 0.3 0.4","0.1 0.2 0.3 0.5"))
         print("Euclidean distance:",euclidean(v1,v2))
         print("Manhattan distance:",manhattan(v1,v2))
-        print("jaccard_ulacia distance:",jaccard_ulacia(v1,v2))
+
