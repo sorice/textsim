@@ -1,13 +1,12 @@
-from .tokendists import matching_coefficient
+from .tokendists import matching_coefficient_textsim
 from .tokendists import jaccard_distance_textsim
 from .tokendists import dice_coefficient_textsim
 from .tokendists import overlap_distance_textsim
 from .tokendists import euclidean_distance_textsim
-# from .tokendists import jaccard_ulacia
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
-    'matching_coefficient': matching_coefficient,
+    'matching_coefficient_textsim': matching_coefficient_textsim,
     'jaccard_distance_textsim': jaccard_distance_textsim,
     'dice_coefficient_textsim': dice_coefficient_textsim,
     'overlap_distance_textsim': overlap_distance_textsim,

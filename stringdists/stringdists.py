@@ -28,7 +28,25 @@ from .swalign import NucleotideScoringMatrix, LocalAlignment
 
 def lcs(s1, s2):
     """
-    Devuelve la subsecuencia mas larga
+    :title: Longest Common Sequence
+
+    Devuelve la subsecuencia mas larga [barron-cedeno2013]_
+
+    :math: max(s1 \in s2)
+
+    :brief formula explanation:
+
+    .. topic:: References
+
+    .. [barron-cedeno2013] Barrón-Cedeño Alberto, Vila Marta, Martí M. Antonia,
+        Rosso Paolo. 2013.
+        Title *"`Plagiarism meets Paraphrasing: Insights for the Next
+        Generation in Automatic Plagiarism Detection
+        <http://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00153>`_"*.
+        In *Computational Linguistics*.
+
+    :doctest:
+
     @param s1, s2: Cadenas a analizar
     @param doc1,doc2: Camino del documento a analizar
     @type s1: str
@@ -39,7 +57,7 @@ def lcs(s1, s2):
     >>> s2 = 'testing123testing'
     >>> lcs(s1, s2) == 'tsitest'
     True
-    Longest common subsequence - Rosetta Code.htm
+
     """
 
     lengths = [[0 for j in range(len(s2)+1)] for i in range(len(s1)+1)]
