@@ -57,6 +57,47 @@ from ..decorators import score_original, Appender
 from .distances_doc import *
 
 @string2tokenset
+def jaccard_distance_textsim(s1,s2):
+    """
+    Jaccard or Tanimoto distance [Jaccard1901]_.
+
+    The Jaccard distance tends to 1 while compared vectors are more similar.
+    The range of values is between [0-1].
+
+    .. math::
+
+        jaccard(X,Y) = \\frac{|X ∩ Y|}{|X ∪ Y|}
+
+
+    where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+    respectively.
+
+    :Citation:
+
+    .. [Jaccard1901] Jaccard, P. (1901). Étude comparative de la distribution
+        florale dans une portion des Alpes et des Jura. Bulletin de la Société
+        Vaudoise des Sciences Naturelles 37, 547-579.
+
+    :param s1,s2: Sentences to compare.
+    :type s1,s2: str
+    :returns: float
+
+    :Doctest:
+
+        >>> x = "0.1 0.2 0.3 0.4"
+        >>> y = "0.1 0.2 0.3 0.5"
+        >>> jaccard(x, y) == 0.6
+        True
+    """
+    c1 = s1 & s2
+    c2 = s1 | s2
+    if len(c2) == 0:
+        result = 'inf'
+    else:
+        result = float(abs(len(c1)-len(c2)))/len(c2)
+    return result
+
+@string2tokenset
 @Appender(jaccard_distance_textsim.__doc__)
 def jaccard_distance(s1,s2):
     """NLTK Jaccard distance implementation.
@@ -64,16 +105,16 @@ def jaccard_distance(s1,s2):
     return jaccard_distance_nltk(s1,s2)
 
 @string2tokenset
-@Appender(masi_distance_nltk.__doc__)
+@Appender(masi_doc)
 def masi_distance(s1,s2):
-    """Masi distance
+    """NLTK Masi distance implementation.
     """
     return masi_distance_nltk(s1,s2)
 
 @string2tokenset
-@Appender(interval_distance_nltk.__doc__)
+@Appender(interval_doc)
 def interval_distance(s1,s2):
-    """Interval distance.
+    """NLTK Interval distance implementation.
     """
     return float(interval_distance_nltk(s1.__len__(),s2.__len__()))
 
@@ -99,9 +140,10 @@ def cosine_distance(s1,s2):
     return cosine_distance_sklearn(s1,s2)
 
 @string2vec
-@Appender(jaccard_scipy.__doc__)
+@Appender(jaccard_distance_textsim.__doc__)
 def jaccard_distance_scipy(s1,s2):
-    "Jaccard distance also known as Tanimoto distance."
+    """Scipy Jaccard distance implementation.
+    """
     return jaccard_scipy(s1,s2)
 
 @string2vec
@@ -248,47 +290,6 @@ def matching_coefficient_textsim(s1,s2):
     maxlen = float(max(len(s1),len(s2)))
     return 1-(maxlen -len(s1.intersection(s2)))/maxlen
 
-@string2tokenset
-def jaccard_distance_textsim(s1,s2):
-    """
-    Jaccard or Tanimoto distance [Jaccard1901]_.
-
-    The Jaccard distance tends to 1 while compared vectors are more similar.
-    The range of values is between [0-1].
-
-    .. math::
-
-
-        jaccard(X,Y) = \\frac{|X ∩ Y|}{|X ∪ Y|}
-
-
-    where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
-    respectively.
-
-    :Citation:
-
-    .. [Jaccard1901] Jaccard, P. (1901). Étude comparative de la distribution
-        florale dans une portion des Alpes et des Jura. Bulletin de la Société
-        Vaudoise des Sciences Naturelles 37, 547-579.
-
-    :param s1,s2: Sentences to compare.
-    :type s1,s2: str
-    :returns: float
-
-    :Doctest:
-
-        >>> x = "0.1 0.2 0.3 0.4"
-        >>> y = "0.1 0.2 0.3 0.5"
-        >>> jaccard(x, y) == 0.6
-        True
-    """
-    c1 = s1 & s2
-    c2 = s1 | s2
-    if len(c2) == 0:
-        result = 'inf'
-    else:
-        result = float(abs(len(c1)-len(c2)))/len(c2)
-    return result
 
 @string2tokenset
 def dice_coefficient_textsim(s1,s2):

@@ -9,16 +9,67 @@ Textsim package additional documentation for distance's doc normalization.
 
 """
 
-from ..decorators import score_original, Appender
+masi_doc = """
+Distance metric that takes into account partial agreement when multiple
+labels are assigned [Passonneau2006]_.
 
-try:
-    from nltk.metrics import jaccard_distance as jaccard_distance_nltk
-except:
-    pass
+.. math::
 
-#jaccard_distance_nltk.__doc__ = Appender(jaccard_distance_nltk.__doc__)(jaccard_doc)
+    masi(X,Y) = 1 - \\frac{|X ∩ Y|}{|X ∪ Y|*m}
 
-jaccard_doc = "%s \nEste es el segundo texto." % jaccard_distance_nltk.__doc__
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively and:
+
+    * :math:`m = 1` if :math:`|X ∩ Y| = |X| = |Y|`
+    * :math:`m = 0.67` if :math:`|X ∩ Y| = min(|X|,|Y|)`
+    * :math:`m = 0.33` if :math:`|X ∩ Y| > 0`
+    * :math:`m = 0` if :math:`|X ∩ Y| = 0`
+
+:Citation:
+
+..  [Passonneau2006] Measuring Agreement on Set-Valued Items (MASI)
+    for Semantic and Pragmatic Annotation.
+
+:param s1,s2: Sentences to compare.
+:type s1,s2: str
+:returns: float
+
+:Doctest:
+
+>>> from nltk.metrics import masi_distance
+>>> masi_distance(set([1, 2]), set([1, 2, 3, 4]))
+0.665...
+
+
+"""
+
+interval_doc = """
+Krippendorff's interval distance metric [Krippendorff1980]_.
+
+.. math::
+
+    interval(X,Y) = (|X - |X ∩ Y||)^2
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+..  [Krippendorff1980] Krippendorff 1980. Content Analysis: An Introduction to
+     its Methodology
+
+:param s1,s2: Sentences to compare.
+:type s1,s2: str
+:returns: float
+
+:Doctest:
+
+    >>> from nltk.metrics import interval_distance
+    >>> interval_distance(1,10)
+    81
+
+
+"""
 
 #Here it is possible to construct complex refactorizations of original doc
 #from external functions. E.g. interval_distance_nltk actual (2017) structure =

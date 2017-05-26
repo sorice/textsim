@@ -26,12 +26,6 @@ finally:
     if not NLTKImportError:
         from .tokendists import (jaccard_distance, masi_distance, interval_distance)
 
-        __nltk_distances__ = [
-            'jaccard_distance',
-             'masi_distance',
-             'interval_distance',
-        ]
-
         PAIRED_DISTANCES['jaccard_distance'] = jaccard_distance
         PAIRED_DISTANCES['masi_distance'] = masi_distance
         PAIRED_DISTANCES['interval_distance'] = interval_distance

@@ -12,17 +12,21 @@ Based on character similarity calculations.
 __author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 
 try:
-    from nltk.metrics import edit_distance as edit_distance_nltk
+    from nltk.metrics import edit_distance as edit_distance_nltk2
     from nltk.metrics import binary_distance as binary_distance_nltk
 except:
     pass
 
 try:
-    from .jellyfish import levenshtein_distance as levenshtein_distance_jellyfish
+    from .jellyfish import levenshtein_distance as levenshtein_distance_jellyfish2
 except:
     pass
 
+from .pattern import levenshtein as levenshtein_distance_pattern2
+from .pattern import levenshtein_similarity as levenshtein_similarity_pattern2
+
 from ..decorators import score_original, Appender
+from .distances_doc import *
 
 from .swalign import NucleotideScoringMatrix, LocalAlignment
 
@@ -83,7 +87,13 @@ def lcs(s1, s2):
             y -= 1
     return result
 
+@Appender(lcs.__doc__)
 def lcs_distance(s1,s2):
+    """Lenght of LCS.
+    """
+    return len(lcs(s1,s2))
+
+def lcs_similarity(s1,s2):
     """
     La distancia de longlcs es una medida de comparacion entre dos cadenas la
     cual va a retornar un valor int, tendiendo a n mientras mayor sea la
@@ -98,7 +108,7 @@ def lcs_distance(s1,s2):
 
     >>> s1 = "jellyfish"
     >>> s2 = "smellyfishs"
-    >>>longlcs(s1,s2) == 0.7272727272727273
+    >>>lcs_similarity(s1,s2) == 0.7272727272727273
     True
     """
 
@@ -127,7 +137,7 @@ def damerau_levenshtein_distance_textsim(s1, s2):
 
     >>> s1 = "jellyfish"
     >>> s2 = "smellyfishs"
-    >>>damerau_levenshtein_distance(s1,s2) == 0.7272727272727273
+    >>>damerau_levenshtein_distance_textsim(s1,s2) == 0.7272727272727273
     True
 
     Damerau-Levenshtein Distance in Python _ Guy Rutenberg.htm
@@ -160,22 +170,53 @@ def damerau_levenshtein_distance_textsim(s1, s2):
     return 1-float(float(d[lenstr1-1,lenstr2-1])/lengthmax)
 
 # if not NLTKImportError:
-@score_original
-def edit_distance(s1,s2):
-    return edit_distance_nltk(s1,s2)
-
+@Appender(binary_distance_nltk.__doc__)
 def binary_distance(s1,s2):
     if binary_distance_nltk(s1,s2):
         return 0.0
     else:
         return 1.0
 
-@score_original
-def levenshtein_distance(s1,s2):
-    """The minimum edit(operations) distance which transforms string1 into string2.
-    Similar to Needleman-Wunch but with G=1
+@Appender(edit_distance_doc)
+def edit_distance_nltk(s1,s2):
+    """NLTK implementation of Levenshtein distance, also known as Edit distance.
     """
-    return levenshtein_distance_jellyfish(s1,s2)
+    return edit_distance_nltk2(s1,s2)
+
+@score_original
+@Appender(edit_similarity_doc)
+def edit_similarity_nltk(s1,s2):
+    """NLTK implementation of Levenshtein similarity.
+    """
+    return edit_distance_nltk2(s1,s2)
+
+#from Jellyfish package
+@Appender(edit_distance_doc)
+def levenshtein_distance_jellyfish(s1,s2):
+    """Pattern implementation of Levenshtein distance, also known as Edit distance.
+    """
+    return levenshtein_distance_jellyfish2(s1,s2)
+
+@score_original
+@Appender(edit_similarity_doc)
+def levenshtein_similarity_jellyfish(s1,s2):
+    """Levenshtein similarity based on Jellyfish Levenshtein distance.
+    """
+    return levenshtein_distance_jellyfish2(s1,s2)
+
+#from Pattern package
+
+@Appender(edit_distance_doc)
+def levenshtein_distance_pattern(s1,s2):
+    """Pattern implementation of Levenshtein distance, also known as Edit distance.
+    """
+    return levenshtein_distance_pattern2(s1,s2)
+
+@Appender(edit_similarity_doc)
+def levenshtein_similarity_pattern(s1,s2):
+    """Pattern package implementation of Levenshtein similarity.
+    """
+    return levenshtein_similarity_pattern2(s1,s2)
 
 def smith_waterman_distance(s1,s2):
     match = 2
@@ -189,6 +230,14 @@ def needleman_wunch(s1, s2, gap_cost=2):
     """The minimum edit (operations) distance which transforms string1 into string2.
 
     D(i,j) = min (deletion, insertion, edit)
+
+    ... math::
+
+    D(i,j) = min(D(i-1,j-1)+d(s_i,t_j),D(i-1,j)+G,D(i,j-1)+G)
+
+    Where :math:`d(i,j)` is a function whereby :math:`d(c,d)=0` if :math:`c=d`, G
+    in other cases.
+
     """
 
     if isinstance(s1, bytes) or isinstance(s2, bytes):

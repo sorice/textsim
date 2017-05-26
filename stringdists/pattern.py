@@ -56,13 +56,3 @@ def dice_coefficient(string1, string2):
     ny = bigrams(string2)
     nt = nx.intersection(ny)
     return 2.0 * len(nt) / ((len(nx) + len(ny)) or 1)
-
-LEVENSHTEIN, DICE = "levenshtein", "dice"
-def similarity(string1, string2, metric=LEVENSHTEIN):
-    """ Returns the similarity of string1 and string2 as a number between 0.0 and 1.0,
-        using LEVENSHTEIN edit distance or DICE coefficient.
-    """
-    if metric == LEVENSHTEIN:
-        return levenshtein_similarity(string1, string2)
-    if metric == DICE:
-        return dice_coefficient(string1, string2)
