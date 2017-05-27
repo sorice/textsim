@@ -24,9 +24,9 @@ except ImportError:
     pass
 finally:
     if not NLTKImportError:
-        from .tokendists import (jaccard_distance, masi_distance, interval_distance)
+        from .tokendists import (jaccard_distance_nltk, masi_distance, interval_distance)
 
-        PAIRED_DISTANCES['jaccard_distance'] = jaccard_distance
+        PAIRED_DISTANCES['jaccard_distance_nltk'] = jaccard_distance_nltk
         PAIRED_DISTANCES['masi_distance'] = masi_distance
         PAIRED_DISTANCES['interval_distance'] = interval_distance
 
@@ -39,12 +39,14 @@ except ImportError:
     pass
 finally:
     if not SklearnImportError:
-        from .tokendists import manhattan_distance as manhattan_distance_sklearn
-        from .tokendists import cosine_distance as cosine_distance_sklearn
-        from .tokendists import euclidean_distance as euclidean_distance_sklearn
+        from .tokendists import manhattan_distance_sklearn
+        from .tokendists import cosine_distance_sklearn
+        from .tokendists import cosine_similarity_sklearn
+        from .tokendists import euclidean_distance_sklearn
 
         PAIRED_DISTANCES['manhattan_distance_sklearn'] = manhattan_distance_sklearn
         PAIRED_DISTANCES['cosine_distance_sklearn'] = cosine_distance_sklearn
+        PAIRED_DISTANCES['cosine_similarity_sklearn'] = cosine_similarity_sklearn
         PAIRED_DISTANCES['euclidean_distance_sklearn'] = euclidean_distance_sklearn
 
 ScipyImportError = False
@@ -89,6 +91,14 @@ finally:
         PAIRED_DISTANCES['sokalsneath_distance_scipy'] = sokalsneath_distance_scipy
         PAIRED_DISTANCES['sqeuclidean_distance_scipy'] = sqeuclidean_distance_scipy
         PAIRED_DISTANCES['yule_distance_scipy'] = yule_distance_scipy
+
+#After performance we compute result and stablished default edit, levenshtein
+#damerau-levenshtein
+# from .tokendists import jaccard_distance_XXX as jaccard_distance
+
+# PAIRED_DISTANCES['jaccard_distance'] = jaccard_distance
+
+
 
 # append all verified distances in module importing argument ALL
 __all__ = []

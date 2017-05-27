@@ -14,27 +14,31 @@ __author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 from ..decorators import string2tokenset, string2vec
 
 try:
-    from nltk.metrics import jaccard_distance as jaccard_distance_nltk
+    from nltk.metrics import jaccard_distance as jaccard_distance_nltk2
     from nltk.metrics import masi_distance as masi_distance_nltk
     from nltk.metrics import interval_distance as interval_distance_nltk
 except:
     pass
 
 try:
-    from sklearn.metrics.pairwise import manhattan_distances as manhattan_sklearn
-    from sklearn.metrics.pairwise import cosine_distances as cosine_distance_sklearn
-    from sklearn.metrics.pairwise import euclidean_distances as euclidean_distances_sklearn
+    from sklearn.metrics.pairwise import manhattan_distances as manhattan_distance_sklearn2
+    from sklearn.metrics.pairwise import cosine_distances as cosine_distance_sklearn2
+    from sklearn.metrics.pairwise import cosine_similarity as cosine_similarity_sklearn2
+    from sklearn.metrics.pairwise import euclidean_distances as euclidean_distance_sklearn2
 except:
     pass
 
 try:
-    from scipy.spatial.distance import jaccard as jaccard_scipy
     from scipy.spatial.distance import braycurtis as braycurtis_scipy
     from scipy.spatial.distance import canberra as canberra_scipy
     from scipy.spatial.distance import chebyshev as chebyshev_scipy
+    from scipy.spatial.distance import cityblock as cityblock_scipy
     from scipy.spatial.distance import correlation as correlation_scipy
+    from scipy.spatial.distance import cosine as cosine_scipy
     from scipy.spatial.distance import dice as dice_scipy
+    from scipy.spatial.distance import euclidean as euclidean_scipy
     from scipy.spatial.distance import hamming as hamming_scipy
+    from scipy.spatial.distance import jaccard as jaccard_scipy
     from scipy.spatial.distance import kulsinski as kulsinski_scipy
     from scipy.spatial.distance import mahalanobis as mahalanobis_scipy
     from scipy.spatial.distance import matching as matching_scipy
@@ -46,6 +50,7 @@ try:
     from scipy.spatial.distance import sokalsneath as sokalsneath_scipy
     from scipy.spatial.distance import sqeuclidean as sqeuclidean_scipy
     from scipy.spatial.distance import yule as yule_scipy
+
 except:
     pass
 
@@ -58,36 +63,7 @@ from .distances_doc import *
 
 @string2tokenset
 def jaccard_distance_textsim(s1,s2):
-    """
-    Jaccard or Tanimoto distance [Jaccard1901]_.
-
-    The Jaccard distance tends to 1 while compared vectors are more similar.
-    The range of values is between [0-1].
-
-    .. math::
-
-        jaccard(X,Y) = \\frac{|X ∩ Y|}{|X ∪ Y|}
-
-
-    where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
-    respectively.
-
-    :Citation:
-
-    .. [Jaccard1901] Jaccard, P. (1901). Étude comparative de la distribution
-        florale dans une portion des Alpes et des Jura. Bulletin de la Société
-        Vaudoise des Sciences Naturelles 37, 547-579.
-
-    :param s1,s2: Sentences to compare.
-    :type s1,s2: str
-    :returns: float
-
-    :Doctest:
-
-        >>> x = "0.1 0.2 0.3 0.4"
-        >>> y = "0.1 0.2 0.3 0.5"
-        >>> jaccard(x, y) == 0.6
-        True
+    """Jaccard or Tanimoto distance.
     """
     c1 = s1 & s2
     c2 = s1 | s2
@@ -99,10 +75,10 @@ def jaccard_distance_textsim(s1,s2):
 
 @string2tokenset
 @Appender(jaccard_distance_textsim.__doc__)
-def jaccard_distance(s1,s2):
+def jaccard_distance_nltk(s1,s2):
     """NLTK Jaccard distance implementation.
     """
-    return jaccard_distance_nltk(s1,s2)
+    return jaccard_distance_nltk2(s1,s2)
 
 @string2tokenset
 @Appender(masi_doc)
@@ -119,32 +95,32 @@ def interval_distance(s1,s2):
     return float(interval_distance_nltk(s1.__len__(),s2.__len__()))
 
 @string2vec
-@Appender(manhattan_sklearn.__doc__)
-def manhattan_distance(s1,s2):
+@Appender(manhattan_dist_sklearn_doc)
+def manhattan_distance_sklearn(s1,s2):
     """Manhattan distance also known as City Block, L1.
     """
-    return manhattan_sklearn(s1,s2)
+    return manhattan_distance_sklearn2(s1,s2)
 
 @string2vec
-@Appender(euclidean_distances_sklearn.__doc__)
-def euclidean_distance(s1,s2):
-    """Euclidean distance also known as L1.
+@Appender(euclidean_dist_sklearn_doc)
+def euclidean_distance_sklearn(s1,s2):
+    """Euclidean distance also known as L2.
     """
-    return euclidean_distances_sklearn(s1,s2)
+    return euclidean_distance_sklearn2(s1,s2)
 
 @string2vec
-@Appender(cosine_distance_sklearn.__doc__)
-def cosine_distance(s1,s2):
-    """Cosine distance also known as Orchini, Angular, Niche.
+@Appender(cosine_dist_sklearn_doc)
+def cosine_distance_sklearn(s1,s2):
+    """Cosine distance.
     """
-    return cosine_distance_sklearn(s1,s2)
+    return cosine_distance_sklearn2(s1,s2)
 
 @string2vec
-@Appender(jaccard_distance_textsim.__doc__)
-def jaccard_distance_scipy(s1,s2):
-    """Scipy Jaccard distance implementation.
+@Appender(cosine_similarity_sklearn2.__doc__)
+def cosine_similarity_sklearn(s1,s2):
+    """Cosine similarity also known as Orchini, Angular, Niche.
     """
-    return jaccard_scipy(s1,s2)
+    return cosine_similarity_sklearn2(s1,s2)
 
 @string2vec
 @Appender(braycurtis_scipy.__doc__)
@@ -165,10 +141,22 @@ def chebyshev_distance_scipy(s1,s2):
     return chebyshev_scipy(s1,s2)
 
 @string2vec
+@Appender(cityblock_scipy.__doc__)
+def cityblock_distance_scipy(s1,s2):
+    ""
+    return cityblock_scipy(s1,s2)
+
+@string2vec
 @Appender(correlation_scipy.__doc__)
 def correlation_distance_scipy(s1,s2):
     ""
     return correlation_scipy(s1,s2)
+
+@string2vec
+@Appender(cosine_scipy.__doc__)
+def cosine_distance_scipy(s1,s2):
+    ""
+    return cosine_scipy(s1,s2)
 
 @string2vec
 @Appender(dice_scipy.__doc__)
@@ -177,10 +165,22 @@ def dice_distance_scipy(s1,s2):
     return dice_scipy(s1,s2)
 
 @string2vec
+@Appender(euclidean_scipy.__doc__)
+def euclidean_distance_scipy(s1,s2):
+    ""
+    return euclidean_scipy(s1,s2)
+
+@string2vec
 @Appender(hamming_scipy.__doc__)
 def hamming_distance_scipy(s1,s2):
     ""
     return hamming_scipy(s1,s2)
+
+@string2vec
+@Appender(jaccard_scipy.__doc__)
+def jaccard_distance_scipy(s1,s2):
+    ""
+    return jaccard_scipy(s1,s2)
 
 @string2vec
 @Appender(kulsinski_scipy.__doc__)
