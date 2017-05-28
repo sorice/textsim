@@ -11,8 +11,8 @@ PAIRED_DISTANCES = {
     'lcs_similarity': lcs_similarity,
     'damerau_levenshtein_distance_textsim': damerau_levenshtein_distance_textsim,
     'smith_waterman_distance': smith_waterman_distance,
-    'needleman_wunch': needleman_wunch,
     'needleman_wunch_distance': needleman_wunch_distance,
+    'needleman_wunch_similarity': needleman_wunch_similarity,
     }
 
 #Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators

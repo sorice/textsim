@@ -19,6 +19,7 @@ except:
 
 try:
     from .jellyfish import levenshtein_distance as levenshtein_distance_jellyfish2
+    from .jellyfish import jaro_distance as jaro_distance_jellyfish
 except:
     pass
 
@@ -167,7 +168,7 @@ def damerau_levenshtein_distance_textsim(s1, s2):
 
     lengthmax = max(s1.__len__(), s2.__len__())
 
-    return 1-float(float(d[lenstr1-1,lenstr2-1])/lengthmax)
+    return 1-float(d[lenstr1-1,lenstr2-1])/lengthmax
 
 # if not NLTKImportError:
 @Appender(binary_distance_nltk.__doc__)
@@ -193,7 +194,7 @@ def edit_similarity_nltk(s1,s2):
 #from Jellyfish package
 @Appender(edit_distance_doc)
 def levenshtein_distance_jellyfish(s1,s2):
-    """Pattern implementation of Levenshtein distance, also known as Edit distance.
+    """Jellyfish implementation of Levenshtein distance, also known as Edit distance.
     """
     return levenshtein_distance_jellyfish2(s1,s2)
 
@@ -203,6 +204,12 @@ def levenshtein_similarity_jellyfish(s1,s2):
     """Levenshtein similarity based on Jellyfish Levenshtein distance.
     """
     return levenshtein_distance_jellyfish2(s1,s2)
+
+@Appender(jaro_dist_doc)
+def jaro_distance(s1,s2):
+    """Jaro distance based on Jellyfish Jaro distance implementation.
+    """
+    return jaro_distance_jellyfish(s1,s2)
 
 #from Pattern package
 
@@ -226,7 +233,7 @@ def smith_waterman_distance(s1,s2):
     tmp=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
     return float(sw.align(s1,s2).matches)/tmp
 
-def needleman_wunch(s1, s2, gap_cost=2):
+def needleman_wunch_distance(s1, s2, gap_cost=2):
     """The minimum edit (operations) distance which transforms string1 into string2.
 
     D(i,j) = min (deletion, insertion, edit)
@@ -268,7 +275,7 @@ def needleman_wunch(s1, s2, gap_cost=2):
 
 @score_original
 @Appender(needleman_wunch.__doc__)
-def needleman_wunch_distance(s1,s2):
+def needleman_wunch_similarity(s1,s2):
     """Esto es el texto inicial.
     """
     return needleman_wunch(s1,s2)

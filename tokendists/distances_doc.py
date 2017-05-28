@@ -30,7 +30,7 @@ jaccard_doc = """The Jaccard distance tends to 1 while compared vectors are more
     :type s1,s2: str
     :returns: float
 
-    :Doctest:
+    :Examples:
 
     >>> x = "0.1 0.2 0.3 0.4"
     >>> y = "0.1 0.2 0.3 0.5"
@@ -59,13 +59,13 @@ masi_doc = """
     :Citation:
 
     ..  [Passonneau2006] Measuring Agreement on Set-Valued Items (MASI)
-        for Semantic and Pragmatic Annotation.
+        for Semantic and Pragmatic Annotation. 2006.
 
     :param s1,s2: Sentences to compare.
     :type s1,s2: str
     :rtype: float
 
-    :Doctest:
+    :Examples:
 
     >>> from nltk.metrics import masi_distance
     >>> masi_distance(set([1, 2]), set([1, 2, 3, 4]))
@@ -92,7 +92,7 @@ interval_doc = """
     :type s1,s2: str
     :rtype: float
 
-    :Doctest:
+    :Examples:
 
     >>> from nltk.metrics import interval_distance
     >>> interval_distance(1,10)
@@ -162,7 +162,7 @@ manhattan_dist_sklearn_doc = """Compute the L1 distances between the vectors in 
     :type s1,s2: str
     :rtype: float
 
-    :Doctest:
+    :Examples:
 
     >>> from sklearn.metrics.pairwise import manhattan_distances
     >>> manhattan_distances([[3]], [[3]])#doctest:+ELLIPSIS
@@ -246,10 +246,8 @@ euclidean_dist_sklearn_doc ="""Computes the paired euclidean distances between X
     :type s1,s2: str
     :rtype: float
 
+    :Examples:
 
-
-    Examples
-    --------
     >>> from sklearn.metrics.pairwise import euclidean_distances
     >>> X = [[0, 1], [1, 1]]
     >>> # distance between rows of X
