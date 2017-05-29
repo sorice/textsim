@@ -20,6 +20,10 @@ except:
 try:
     from .jellyfish import levenshtein_distance as levenshtein_distance_jellyfish2
     from .jellyfish import jaro_distance as jaro_distance_jellyfish
+    from .jellyfish import jaro_winkler as jaro_winkler_distance_jellyfish
+    from .jellyfish import hamming_distance as hamming_distance_jellyfish
+    from .jellyfish import damerau_levenshtein_distance as damerau_levenshtein_distance_jellyfish2
+    from .jellyfish import match_rating_comparison as match_rating_comparison2
 except:
     pass
 
@@ -121,27 +125,8 @@ def lcs_similarity(s1,s2):
         tmp=len(s1)
     return float(len(arr))/tmp
 
-def damerau_levenshtein_distance_textsim(s1, s2):
-    """
-    La distancia de Damerau es una medida de comparacion entre dos cadenas la
-    cual va a retornar un valor int, tendiendo a 0 mientras mayor sea la
-    semejanza.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
-    similitud.
-    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado
-    con 1 para invertir el orden a que esta tendiendo
-    @param s1, s2: Cadenas a analizare
-    @type s1: str
-    @type s2: str
-    @rtype int
-
-    >>> s1 = "jellyfish"
-    >>> s2 = "smellyfishs"
-    >>>damerau_levenshtein_distance_textsim(s1,s2) == 0.7272727272727273
-    True
-
-    Damerau-Levenshtein Distance in Python _ Guy Rutenberg.htm
+def damerau_levenshtein_similarity_textsim(s1, s2):
+    """Damerau variation of Levenshtein distance.
     """
 
     d = {}
@@ -211,8 +196,31 @@ def jaro_distance(s1,s2):
     """
     return jaro_distance_jellyfish(s1,s2)
 
-#from Pattern package
+@Appender(jaro_winkler_dist_doc)
+def jaro_winkler_distance(s1,s2):
+    """Jaro Winkler distance based on Jellyfish Jaro-Winkler distance implementation.
+    """
+    return jaro_winkler_distance_jellyfish(s1,s2)
 
+@Appender(hamming_dist_doc)
+def hamming_distance(s1,s2):
+    """Jaro distance based on Jellyfish Jaro distance implementation.
+    """
+    return hamming_distance_jellyfish(s1,s2)
+
+@Appender(damerau_levenshtein_dist_doc)
+def damerau_levenshtein_distance_jellyfish(s1,s2):
+    """Jaro distance based on Jellyfish Jaro distance implementation.
+    """
+    return damerau_levenshtein_distance_jellyfish2(s1,s2)
+
+@Appender(match_rating_comparison_doc)
+def match_rating_comparison(s1,s2):
+    """Matching rating comparison.
+    """
+    return match_rating_comparison2(s1,s2)
+
+#from Pattern package
 @Appender(edit_distance_doc)
 def levenshtein_distance_pattern(s1,s2):
     """Pattern implementation of Levenshtein distance, also known as Edit distance.
@@ -225,6 +233,7 @@ def levenshtein_similarity_pattern(s1,s2):
     """
     return levenshtein_similarity_pattern2(s1,s2)
 
+#From swalign package
 def smith_waterman_distance(s1,s2):
     match = 2
     mismatch = -1
@@ -233,18 +242,9 @@ def smith_waterman_distance(s1,s2):
     tmp=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
     return float(sw.align(s1,s2).matches)/tmp
 
+@Appender(needleman_wunch_dist_doc)
 def needleman_wunch_distance(s1, s2, gap_cost=2):
-    """The minimum edit (operations) distance which transforms string1 into string2.
-
-    D(i,j) = min (deletion, insertion, edit)
-
-    ... math::
-
-    D(i,j) = min(D(i-1,j-1)+d(s_i,t_j),D(i-1,j)+G,D(i,j-1)+G)
-
-    Where :math:`d(i,j)` is a function whereby :math:`d(c,d)=0` if :math:`c=d`, G
-    in other cases.
-
+    """Needleman Wunch distance.
     """
 
     if isinstance(s1, bytes) or isinstance(s2, bytes):
@@ -274,15 +274,15 @@ def needleman_wunch_distance(s1, s2, gap_cost=2):
 
 
 @score_original
-@Appender(needleman_wunch.__doc__)
+@Appender(needleman_wunch_dist_doc)
 def needleman_wunch_similarity(s1,s2):
-    """Esto es el texto inicial.
+    """Needleman Wunch distance divided by the maximal length of both strings.
     """
-    return needleman_wunch(s1,s2)
+    return needleman_wunch_distance(s1,s2)
 
 if __name__ == '__main__':
     s1=input("Input text A:")
     s2=input("Input text B:")
     print("La subsecuencia mas larga con el metodo LCS es '%s'" % lcs(s1,s2))
     print("LCS distance:",longlcs(s1,s2))
-    print("Damerau levenshtein distance:",damerau_levenshtein_distance(s1,s2))
+    print("Damerau levenshtein distance:",damerau_levenshtein_similarity_textsim(s1,s2))

@@ -1,6 +1,6 @@
 #import unicodedata
 from collections import defaultdict
-#from .compat import _range, _zip_longest, _no_bytes_err
+from itertools import zip_longest as _zip_longest
 #from .porter import Stemmer
 
 

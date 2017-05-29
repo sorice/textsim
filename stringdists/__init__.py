@@ -1,15 +1,15 @@
 from .stringdists import (lcs_distance, lcs_similarity,
-                            damerau_levenshtein_distance_textsim,
+                            damerau_levenshtein_similarity_textsim,
                             smith_waterman_distance,
-                            needleman_wunch,
-                            needleman_wunch_distance)
+                            needleman_wunch_distance,
+                            needleman_wunch_similarity)
 #from .stringdists import damerau_levenshtein_distance_textsim as damerau_levenshtein_distance
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
     'lcs_distance': lcs_distance,
     'lcs_similarity': lcs_similarity,
-    'damerau_levenshtein_distance_textsim': damerau_levenshtein_distance_textsim,
+    'damerau_levenshtein_similarity_textsim': damerau_levenshtein_similarity_textsim,
     'smith_waterman_distance': smith_waterman_distance,
     'needleman_wunch_distance': needleman_wunch_distance,
     'needleman_wunch_similarity': needleman_wunch_similarity,
@@ -43,10 +43,10 @@ except:
 finally:
     if not JellyfishImportError:
         from .stringdists import (levenshtein_similarity_jellyfish,
-                                levenshtein_distance_jellyfish)
-        from .jellyfish import jaro_distance, hamming_distance
-        from .jellyfish import jaro_winkler as jaro_winkler_distance
-        from .jellyfish import damerau_levenshtein_distance as damerau_levenshtein_distance_jellyfish
+                                levenshtein_distance_jellyfish,
+                                match_rating_comparison, jaro_distance,
+                                jaro_winkler_distance, hamming_distance,
+                                damerau_levenshtein_distance_jellyfish)
 
         PAIRED_DISTANCES['levenshtein_distance_jellyfish'] = levenshtein_distance_jellyfish
         PAIRED_DISTANCES['levenshtein_similarity_jellyfish'] = levenshtein_similarity_jellyfish
@@ -54,6 +54,7 @@ finally:
         PAIRED_DISTANCES['jaro_winkler_distance'] = jaro_winkler_distance
         PAIRED_DISTANCES['hamming_distance'] = hamming_distance
         PAIRED_DISTANCES['damerau_levenshtein_distance_jellyfish'] = damerau_levenshtein_distance_jellyfish
+        PAIRED_DISTANCES['match_rating_comparison'] = match_rating_comparison
 
 from .stringdists import levenshtein_distance_pattern, levenshtein_similarity_pattern
 from .pattern import dice_coefficient as dice_coefficient_pattern
