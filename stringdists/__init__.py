@@ -1,6 +1,6 @@
 from .stringdists import (lcs_distance, lcs_similarity,
                             damerau_levenshtein_similarity_textsim,
-                            smith_waterman_distance,
+                            smith_waterman_distance,smith_waterman_similarity,
                             needleman_wunch_distance,
                             needleman_wunch_similarity)
 #from .stringdists import damerau_levenshtein_distance_textsim as damerau_levenshtein_distance
@@ -11,6 +11,7 @@ PAIRED_DISTANCES = {
     'lcs_similarity': lcs_similarity,
     'damerau_levenshtein_similarity_textsim': damerau_levenshtein_similarity_textsim,
     'smith_waterman_distance': smith_waterman_distance,
+    'smith_waterman_similarity': smith_waterman_similarity,
     'needleman_wunch_distance': needleman_wunch_distance,
     'needleman_wunch_similarity': needleman_wunch_similarity,
     }
@@ -56,12 +57,13 @@ finally:
         PAIRED_DISTANCES['damerau_levenshtein_distance_jellyfish'] = damerau_levenshtein_distance_jellyfish
         PAIRED_DISTANCES['match_rating_comparison'] = match_rating_comparison
 
-from .stringdists import levenshtein_distance_pattern, levenshtein_similarity_pattern
-from .pattern import dice_coefficient as dice_coefficient_pattern
+from .stringdists import (levenshtein_distance_pattern,
+                        levenshtein_similarity_pattern)
+from .stringdists import dice_coefficient_pattern as dice_coefficient
 
 PAIRED_DISTANCES['levenshtein_distance_pattern'] = levenshtein_distance_pattern
 PAIRED_DISTANCES['levenshtein_similarity_pattern'] = levenshtein_similarity_pattern
-PAIRED_DISTANCES['dice_coefficient_pattern'] = dice_coefficient_pattern
+PAIRED_DISTANCES['dice_coefficient'] = dice_coefficient
 
 #After performance we compute result and stablished default edit, levenshtein
 #damerau-levenshtein

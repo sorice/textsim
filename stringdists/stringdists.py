@@ -29,6 +29,7 @@ except:
 
 from .pattern import levenshtein as levenshtein_distance_pattern2
 from .pattern import levenshtein_similarity as levenshtein_similarity_pattern2
+from .pattern import dice_coefficient as dice_coefficient_pattern2
 
 from ..decorators import score_original, Appender
 from .distances_doc import *
@@ -36,37 +37,7 @@ from .distances_doc import *
 from .swalign import NucleotideScoringMatrix, LocalAlignment
 
 def lcs(s1, s2):
-    """
-    :title: Longest Common Sequence
-
-    Devuelve la subsecuencia mas larga [barron-cedeno2013]_
-
-    :math: max(s1 \in s2)
-
-    :brief formula explanation:
-
-    .. topic:: References
-
-    .. [barron-cedeno2013] Barrón-Cedeño Alberto, Vila Marta, Martí M. Antonia,
-        Rosso Paolo. 2013.
-        Title *"`Plagiarism meets Paraphrasing: Insights for the Next
-        Generation in Automatic Plagiarism Detection
-        <http://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00153>`_"*.
-        In *Computational Linguistics*.
-
-    :doctest:
-
-    @param s1, s2: Cadenas a analizar
-    @param doc1,doc2: Camino del documento a analizar
-    @type s1: str
-    @type s2: str
-    @rtype str
-
-    >>> s1 = 'thisisatest'
-    >>> s2 = 'testing123testing'
-    >>> lcs(s1, s2) == 'tsitest'
-    True
-
+    """Longest Common Substring
     """
 
     lengths = [[0 for j in range(len(s2)+1)] for i in range(len(s1)+1)]
@@ -99,31 +70,11 @@ def lcs_distance(s1,s2):
     return len(lcs(s1,s2))
 
 def lcs_similarity(s1,s2):
+    """Longest Common Substring Similarity
     """
-    La distancia de longlcs es una medida de comparacion entre dos cadenas la
-    cual va a retornar un valor int, tendiendo a n mientras mayor sea la
-    semejanza es una modificacion de longlcs, donde n es la longitud de s1.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    dividiendo entre la longitud de la cadena mas larga
-    @param s1, s2: Cadenas a analizar
-    @param doc1,doc2: Camino del documento a analizar
-    @type s1: str
-    @type s2: str
-    @rtype int
-
-    >>> s1 = "jellyfish"
-    >>> s2 = "smellyfishs"
-    >>>lcs_similarity(s1,s2) == 0.7272727272727273
-    True
-    """
-
-    arr=lcs(s1, s2)
-
-    if s1<s2:
-        tmp=len(s2)
-    else:
-        tmp=len(s1)
-    return float(len(arr))/tmp
+    LCS = len(lcs(s1, s2))
+    p,q = LCS/s1.__len__(), LCS/s2.__len__()
+    return float(2* p * q/( p + q ))
 
 def damerau_levenshtein_similarity_textsim(s1, s2):
     """Damerau variation of Levenshtein distance.
@@ -233,14 +184,29 @@ def levenshtein_similarity_pattern(s1,s2):
     """
     return levenshtein_similarity_pattern2(s1,s2)
 
+@Appender(dice_doc)
+def dice_coefficient_pattern(s1,s2):
+    """Pattern package implementation of Dice coefficient.
+    """
+    return dice_coefficient_pattern2(s1,s2)
+
 #From swalign package
-def smith_waterman_distance(s1,s2):
-    match = 2
-    mismatch = -1
+@Appender(smith_waterman_dist_doc)
+def smith_waterman_distance(s1,s2,match=2,mismatch=-1,gap_cost=-1):
+    """Smith-Waterman distance.
+    """
     scoring = NucleotideScoringMatrix(match, mismatch)
-    sw = LocalAlignment(scoring)
-    tmp=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
-    return float(sw.align(s1,s2).matches)/tmp
+    sw = LocalAlignment(scoring,gap_cost)
+    return float(sw.align(s1,s2).matches)
+
+@Appender(smith_waterman_dist_doc)
+def smith_waterman_similarity(s1,s2,match=2,mismatch=-1,gap_cost=-1):
+    """Smith-Waterman distance divided by length of matches + mismatches.
+    """
+    scoring = NucleotideScoringMatrix(match, mismatch)
+    sw = LocalAlignment(scoring,gap_cost)
+    total=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
+    return float(sw.align(s1,s2).matches)/total
 
 @Appender(needleman_wunch_dist_doc)
 def needleman_wunch_distance(s1, s2, gap_cost=2):

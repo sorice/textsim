@@ -262,7 +262,7 @@ in other cases.
 
 .. [Needleman1970] Needleman, S. B. & Wunsch, C. D. A general method applicable
     to the search for similarities in the amino acid sequence of two proteins.
-    Journal of Molecular Biology, 1970, 48(3), 443-453.
+    Journal of Molecular Biology, 1970, 48(3): 443-453.
 
 :param s1, s2: The strings to be analysed
 :type s1: str
@@ -276,3 +276,150 @@ in other cases.
 >>> s2 = 'bcdfgh'
 5
 """
+
+lcs_doc = """
+For two strings X and Y, let :math:`x = x_1...x_m` be the characters in X
+and :math:`y = y_1...y_n` be the charcaters in Y. Over some alphabet, lcs
+find the longest string S that is a subsequence of both X and Y [allison1986]_.
+
+.. math::
+
+    LCS(X,Y) = max(L(i,j)), where\ i,j \in {[1,n];[1,m]}
+
+Where :math:`m,n` are the length in characters of strings :math:`X,Y`
+respectively and
+
+.. math::
+
+    L(i,j) = \\begin{cases} 0                      & {if\ i=0\ or\ j=0}
+                        \\\ 1+L(i-1,j-1)           & {x_i = y_j}
+                        \\\ max(L(i-1,j),L(i,j-1)) & otherwise \end{cases}
+
+:Citation:
+
+.. [allison1986] Lloyd Allison & Trevor I. Dix (1986).
+    A bit-string longest-common-subsequence algorithm.
+    Information Processing Letters, Elsevier, 1986, 23(5): 305-310.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: str
+
+:Examples:
+
+>>> from textsim.strindists import lcs
+>>> s1 = 'thisisatest'
+>>> s2 = 'testing123testing'
+>>> lcs(s1, s2) == 'tsitest'
+True
+
+"""
+
+lcs_similarity_doc = """
+Given the longest common substring (LCS) between X and Y, the lcs_similarity
+is the harmonic mean of the LCS/len(X) and LCS/len(Y).
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.strindists import lcs, lcs_similarity
+>>> s1 = "jellyfish"
+>>> s2 = "smellyfishs"
+>>>lcs_similarity(s1,s2) == 0.7272727272727273
+True
+
+:See also:
+
+:func:`textsim.strindists.lcs` for LCS understanding.
+"""
+
+smith_waterman_dist_doc = """
+Similar to Edit distance ranking operations to align both compared strings.
+This function have two additional parameters: match and mismatch to weight the
+values if chars match or not. The algorithm stablished a gap cost for char
+insertion and deletion.
+
+.. math:
+
+    D(i,j) = max(d(i-1,j-1)-d(s_i,t_j),d_L(i-1,j)+1,d_L(i,j-1)+1)
+
+where :math:`D(i,j)` is maximum value over all i,j in table. :math:`X,Y` are
+the initial sentences and :math:`x = x_1...x_m` and :math:`y = y_1...y_n` are
+the characters in X and Y respectively.
+
+Operations:
+
+    * 0 if start over
+    * :math:`D(i-1,j-1)-d(x_i,y_j)` if SUBST/COPY
+    * :math:`D(i-1,j)-G` if INSERT
+    * :math:`D(i,j-1)-G` if DELETE
+
+Where :math:`d(i,j)` is a function whereby :math:`d(i,j)=match` if x_i = y_j,
+else :math:`d(i,j)=mismatch` if :math:`x_i \neq y_j`. :math:`G` is the gap cost
+value.
+
+:Citation:
+
+.. [smith1981] Temple F. Smith & Michel S. Waterman (1981).
+    Identification of common molecular subsequences.
+    Journal of molecular biology 147(1): 195-197. Elsevier.
+
+:param s1, s2: The strings to be analysed
+:type s1, s2: str
+:param match, mismatch: context dependent substitution cost
+:type match, mismatch: int, default values 2,-1
+:param G: gap cost value, defauld value -1
+:rtype: float
+
+:Examples:
+
+>>> from textsim.strindists import smith_waterman_distance
+>>> s1 = "aaaa mnop zzzz"
+>>> s2 = "bbbb mnop yyyy"
+>>> smith_waterman_distance(s1,s2)
+6.0
+>>> from textsim.strindists import smith_waterman_similarity
+>>> smith_waterman_similarity(s1,s2)
+1.0
+
+"""
+
+dice_doc = """
+Returns the similarity between string1 and string1 as a number between [0,1]
+based on the number of shared character bigrams. E.g., "night" and "nacht"
+have one common bigram "ht" [dice1945]_.
+
+.. math:
+
+    dice(X,Y) = \\frac{2*|2-grams(X) ∩ 2-grams(Y)|}{|2-grams(X)|+|2-grams(Y)|}
+
+
+Where :math:`X` and :math:`Y` are the initial strings to be compare, and
+:math:`2-grams(z)` returns the set of bigrams of the string z. It's implemented
+internaly.
+
+:Citation:
+
+.. [dice1945] Lee R. Dice (1945).
+    Measures of the amount of ecologic association between species.
+    Journal of Ecology 26(3): 297-302. Wiley Online Library
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+>>> from textsim.strindists import dice_coefficient_pattern
+>>> s1 = "jellyfish"
+>>> s2 = "smellyfishs"
+>>>dice_coefficient_pattern(s1,s2)
+0.777...
+"""
+
+
