@@ -113,4 +113,8 @@ __not_implemented__ = [
     'Skew divergence',
     'Tau distance',
     'Q-gram distance',            #se puede implementar fácil
+    'Containment distance',
+    'Q-gram Overlap',
+    'Skip-grams distance',
+    'Greedy String Tiling'
 ]

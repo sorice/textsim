@@ -63,7 +63,7 @@ from .distances_doc import *
 
 @string2tokenset
 def jaccard_distance_textsim(s1,s2):
-    """Jaccard or Tanimoto distance.
+    """Textsim implementation of Jaccard or Tanimoto distance.
     """
     c1 = s1 & s2
     c2 = s1 | s2
@@ -73,6 +73,7 @@ def jaccard_distance_textsim(s1,s2):
         result = float(abs(len(c1)-len(c2)))/len(c2)
     return result
 
+#from NLTK package if installed
 @string2tokenset
 @Appender(jaccard_distance_textsim.__doc__)
 def jaccard_distance_nltk(s1,s2):
@@ -94,34 +95,36 @@ def interval_distance(s1,s2):
     """
     return float(interval_distance_nltk(s1.__len__(),s2.__len__()))
 
+#from Sklearn package if installed
 @string2vec
 @Appender(manhattan_dist_sklearn_doc)
 def manhattan_distance_sklearn(s1,s2):
-    """Manhattan distance also known as City Block, L1.
+    """Sklearn implementation of Manhattan distance also known as City Block, L1.
     """
     return manhattan_distance_sklearn2(s1,s2)
 
 @string2vec
-@Appender(euclidean_dist_sklearn_doc)
+@Appender(euclidean_dist_doc)
 def euclidean_distance_sklearn(s1,s2):
-    """Euclidean distance also known as L2.
+    """Sklearn implementation of Euclidean distance also known as L2.
     """
     return euclidean_distance_sklearn2(s1,s2)
 
 @string2vec
 @Appender(cosine_dist_sklearn_doc)
 def cosine_distance_sklearn(s1,s2):
-    """Cosine distance.
+    """Sklearn implementation of Cosine distance.
     """
     return cosine_distance_sklearn2(s1,s2)
 
 @string2vec
-@Appender(cosine_similarity_sklearn2.__doc__)
+@Appender(cosine_similarity_sklearn_doc)
 def cosine_similarity_sklearn(s1,s2):
-    """Cosine similarity also known as Orchini, Angular, Niche.
+    """Sklearn implementation of Cosine similarity also known as Orchini, Angular, Niche.
     """
     return cosine_similarity_sklearn2(s1,s2)
 
+#from Scipy package if installed
 @string2vec
 @Appender(braycurtis_scipy.__doc__)
 def braycurtis_distance_scipy(s1,s2):
@@ -257,18 +260,9 @@ def yule_distance_scipy(s1,s2):
     return yule_scipy(s1,s2)
 
 @string2tokenset
+@Appender(matching_scipy.__doc__)
 def matching_coefficient_textsim(s1,s2):
     """
-    Medida de similitud basada en vectores. Similar a la distancia de Hamming pero
-    esta debe ser entre vectores de igual longitud. Esta distancia va a devolver un
-    valor entre [0-x] donde cuanto menor sea la distancia entre los vectores mas
-    semejanza existira por lo que su valor tendera a 0.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
-    similitud.
-    Esta operacion se realizo dividiendo entre la longitud de la cadena mas larga y restando el resultado
-    con 1 para invertir el orden a que esta tendiendo
-
                    (|x|-|x∩y|)
     M(x,y) = 1 -  -----------------
                    max_longitud(x,y)
@@ -278,43 +272,13 @@ def matching_coefficient_textsim(s1,s2):
     @type s2: str
     @rtype: float
 
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> matching_coefficient(x, y, "", "",idioma) ==  0.75
-    True
-
-    Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
-    Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
-    maxlen = float(max(len(s1),len(s2)))
-    return 1-(maxlen -len(s1.intersection(s2)))/maxlen
-
 
 @string2tokenset
+@Appender(dice_coefficient_doc)
 def dice_coefficient_textsim(s1,s2):
     """
-    La medida de Dice_coefficient (similar a Jaccard) es una medida de similitud que va
-    a tender a 2 mientras mas semejanza exista entre dos vectores y el rango de su
-    resultado va estar entre [0-2]
-
-                    2|X ∩ Y|
-    dice(X,Y) = -----------
-                     |X|+|Y|
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> dice_coefficient(x, y, "", "",idioma) == 1.2
-    True
-
-    Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
-    Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
+    Textsim implementation of Dice Coefficient.
     """
     c1 = s1 & s2
     c2 = s1 | s2
@@ -354,33 +318,10 @@ def overlap_distance_textsim(s1,s2):
     return result
 
 @string2tokenset
+@Appender(euclidean_dist_doc)
 def euclidean_distance_textsim(s1,s2):
     """
-    Euclidean es una medida de distancia geometrica entre dos vectores que tiende a 0 mientras mas
-    semejantes son los vectores. Esta medida utiliza el metodo tf para asignarle un peso a las palabras
-    de acuerdo a la frecuencia.
-    En esta implementacion se realizo una modificacion para obtener un valor entre [0-1]
-    donde cuando tiende a 1 es que existe mayor similitud y cuando tiende a 0 tiene menor
-    similitud.
-    Esta operacion se realizo  restando el resultado con 1 para invertir el orden a que esta tendiendo
-
-                               ₂
-    euclidean(x,y)= ⎷∑ |x - y |
-                      i  i   i
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> euclidean(x, y, "", "", idioma) == 1.0
-    True
-
-    Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
-    Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
+    Textsim implementation of Euclidean distance also known as L2.
     """
 
     s1 = list(s1)

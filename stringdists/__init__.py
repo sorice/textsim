@@ -88,4 +88,6 @@ for distance in PAIRED_DISTANCES:
 __not_implemented__ = [
     'Gotoh distance',
     'Monge Elkan distance',
+    'N-grams Overlap'
+    'Containment distance'
 ]

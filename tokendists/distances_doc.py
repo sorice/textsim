@@ -9,7 +9,8 @@ Textsim package additional documentation for distance's doc normalization.
 
 """
 
-jaccard_doc = """The Jaccard distance tends to 1 while compared vectors are more similar.
+jaccard_doc = """
+    The Jaccard distance tends to 1 while compared vectors are more similar.
     The range of values is between [0-1] [Jaccard1901]_.
 
     .. math::
@@ -118,7 +119,8 @@ interval_doc = """
     # (%s, explanation, %s-re, %s, parameters, returns, %s-re, %s, see also)  %
     # (title,formated math, :brief formula explanation:, example as doctest, ref)
 
-manhattan_dist_sklearn_doc = """Compute the L1 distances between the vectors in X and Y.
+manhattan_dist_sklearn_doc = """
+    Compute the L1 distances between the vectors in X and Y.
 
     With sum_over_features equal to False it returns the componentwise
     distances. The :math:`L_1` or block distance is calcualted from summing
@@ -128,8 +130,8 @@ manhattan_dist_sklearn_doc = """Compute the L1 distances between the vectors in 
 
         L_1(X,Y) = \\sum_{i} |X_i-Y_i|
 
-    where :math:`X` and :math:`Y` are the vector set of each sentence :math:`s1,s2`
-    respectively.
+    where :math:`X` and :math:`Y` are the term frecuency vector of each
+    sentence :math:`s1,s2` respectively.
 
     :Internal Formula Explanation:
 
@@ -188,7 +190,7 @@ manhattan_dist_sklearn_doc = """Compute the L1 distances between the vectors in 
 
     """
 
-euclidean_dist_sklearn_doc ="""Computes the paired euclidean distances between X and Y.
+euclidean_dist_doc ="""Computes the paired euclidean distances between X and Y.
 
     Considering the rows of X (and Y=X) as vectors, compute the
     distance matrix between each pair of vectors.[Deza2009]_
@@ -201,8 +203,8 @@ euclidean_dist_sklearn_doc ="""Computes the paired euclidean distances between X
         L_2(X, Y) = \sqrt(\sum_{i} (X_i - Y_i)^2)
 
 
-    where :math:`X` and :math:`Y` are the vector set of each sentence :math:`s1,s2`
-    respectively.
+    where :math:`X` and :math:`Y` are the term frecuency vector of each
+    sentence :math:`s1,s2` respectively.
 
     Optimized equation for computing:
 
@@ -210,7 +212,7 @@ euclidean_dist_sklearn_doc ="""Computes the paired euclidean distances between X
 
         dist(X, Y) = sqrt(dot(X, X) - 2 * dot(X, Y) + dot(Y, Y))
 
-    :Internal Formula Explanation:
+    :Additional Sklearn Formula Explanation:
 
     :param X: {array-like, sparse matrix}, shape (n_samples_1, n_features)
     :param Y: : {array-like, sparse matrix}, shape (n_samples_2, n_features)
@@ -271,10 +273,10 @@ cosine_dist_sklearn_doc ="""Compute cosine distance between samples in X and Y.
 
     .. math::
 
-        L_2(X,Y) = 1-cos(\\frac{{X∩Y}}{\sqrt{X \\cdot Y}})
+        d_{cos}(X,Y) = 1 - cosine_similarity
 
-    where :math:`X` and :math:`Y` are the vector set of each sentence :math:`s1,s2`
-    respectively.
+    Where :math:`X` and :math:`Y` are the term frecuency vector of each
+    sentence :math:`s1,s2` respectively.
 
     :Internal Formula Explanation:
 
@@ -294,12 +296,116 @@ cosine_dist_sklearn_doc ="""Compute cosine distance between samples in X and Y.
     :type s1,s2: str
     :rtype: float
 
+    :Examples:
+
+    >>>from sklearn.metrics.pairwise import cosine_distances
+    >>>from sklearn.feature_extraction.text import CountVectorizer
+    >>>s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+    >>>s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+    >>>countv = CountVectorizer()
+    >>>tdm = countv.fit_transform([s1,s2])
+    >>>X,Y = tdm[0],tdm[1]
+    >>>float(cosine_distances(X,Y))
+    0.296...
+
+    >>>from textsim.tokendists import cosine_distance_sklearn
+    >>>cosine_distance_sklearn(s1,s2)
+    0.296...
+
     :See also:
 
-    sklearn.metrics.pairwise.cosine_similarity
     scipy.spatial.distance.cosine (dense matrices only)
     Read more in the **Sklearn User Guide** :mod:`metrics`.
 
     """
 
-cocine_similarity_sklearn_doc = ""
+cosine_similarity_sklearn_doc = """
+Cosine similarity is a vector based similarity measure. Input strings are
+transformed into vector space (in a Term Frecuency model), then the Euclidean
+cosine rule can be used to calculate the similarity [Deza2009]_.
+
+.. math::
+
+    cos(X,Y) = \\frac{\\sum_i{(x_i*y_i)}}{\sqrt{\\sum x_i^2* \\sum y_i^2}}
+
+:Math Algebra Notation:
+
+.. math::
+
+    cos(X,Y) = \\frac{<X,Y>}{||X||*||Y||}
+
+Where :math:`X` and :math:`Y` are the term frecuency vector of each
+sentence :math:`s1,s2` respectively, and :math:`[x_1,...,x_{n}]` is the
+representation of X based on the frecuencies of terms contained in the
+union of the token set representations of s1 and s2 (:math:`s1 ∪ s2`). Ibidem
+for :math:`Y = [y_1,...,y_{n}]`.
+
+:Internal Formula Explanation:
+
+:param X: ndarray or sparse array, shape: (n_samples_X, n_features)
+:param Y: ndarray or sparse array, shape: (n_samples_Y, n_features)
+        Input data. If ``None``, the output will be the pairwise
+        similarities between all samples in ``X``.
+:param dense_output: boolean (optional), default True
+        Whether to return dense output even when the input is sparse. If
+        ``False``, the output is sparse if both input arrays are sparse.
+:returns kernel matrix: An array with shape (n_samples_X, n_samples_Y).
+
+>>>from textsim.tokendists import cosine_distance_sklearn
+>>>cosine_similarity_sklearn(s1,s2)
+0.703...
+
+:Citation:
+
+.. [Deza2009] Michel María Daeza and Elena Daeza.
+    Encyclopedia of Distances.
+    Springer-Verlag Berlin Heidelberg, 2009.
+    ISBN: 978-3-642-00233-5
+
+param s1,s2: Sentences to compare.
+:type s1,s2: str
+:rtype: float
+
+:See also:
+
+Read about *Text Feature Extraction* in the **Sklearn User Guide**
+:mod:`feature_extraction`.
+
+"""
+
+dice_coefficient_doc = """
+Returns the similarity between string1 and string1 as a number between [0,1]
+based on the number of shared tokens [dice1945]_.
+
+.. math:
+
+    dice(X,Y) = \\frac{2*|X ∩ Y|}{|X|+|Y|}
+
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [dice1945] Lee R. Dice (1945).
+    Measures of the amount of ecologic association between species.
+    Journal of Ecology 26(3): 297-302. Wiley Online Library
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+>>> from textsim.tokendists import dice_coefficient_textsim
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> dice_coefficient_textsim(s1,s2)
+0.307...
+"""
+
+matching_coefficient_doc = """
+"""
+
+overlap_distance_doc = """
+"""
