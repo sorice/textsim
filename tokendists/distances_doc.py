@@ -351,10 +351,6 @@ for :math:`Y = [y_1,...,y_{n}]`.
         ``False``, the output is sparse if both input arrays are sparse.
 :returns kernel matrix: An array with shape (n_samples_X, n_samples_Y).
 
->>>from textsim.tokendists import cosine_distance_sklearn
->>>cosine_similarity_sklearn(s1,s2)
-0.703...
-
 :Citation:
 
 .. [Deza2009] Michel María Daeza and Elena Daeza.
@@ -365,6 +361,14 @@ for :math:`Y = [y_1,...,y_{n}]`.
 param s1,s2: Sentences to compare.
 :type s1,s2: str
 :rtype: float
+
+:Examples:
+
+>>>from textsim.tokendists import cosine_distance_sklearn
+>>>s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>>s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>>cosine_similarity_sklearn(s1,s2)
+0.703...
 
 :See also:
 
@@ -377,7 +381,7 @@ dice_coefficient_doc = """
 Returns the similarity between string1 and string1 as a number between [0,1]
 based on the number of shared tokens [dice1945]_.
 
-.. math:
+.. math::
 
     dice(X,Y) = \\frac{2*|X ∩ Y|}{|X|+|Y|}
 
@@ -397,6 +401,7 @@ respectively.
 :rtype: float
 
 :Examples:
+
 >>> from textsim.tokendists import dice_coefficient_textsim
 >>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
 >>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
@@ -404,8 +409,203 @@ respectively.
 0.307...
 """
 
-matching_coefficient_doc = """
+overlap_distance_doc = """
+Overlap coefficient considers two strings a full match if one is a subset of
+another and it is similar to Dice Coefficient. The overlap coefficient also
+called as Szymkiewicz-Simpson coefficient is a similarity measure that is
+related to the Jaccard index. It measures the overlap between two sets.
+The measure is calculated by dividing the size of the intersection by the
+smaller of the size of the two sets [simpson1960]_,[Vijaymeena2016]_.
+
+.. math::
+
+    OC(X,Y) = \\frac{|X ∩ Y|}{min(|X|,|Y|)}
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [simpson1960] George Gaylord Simpson (1960).
+    Notes on the measurement of faunal resemblance.
+    American Journal of Science, 1960, 258(2): 300-311.
+
+.. [Vijaymeena2016] M.K. Vijaymeena & K. Kavitha (2016).
+    A SURVEY ON SIMILARITY MEASURES IN TEXT MINING
+    Machine Learning and Applications: An International Journal (MLAIJ), 3, 19-28.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import overlap_distance_textsim
+>>> x = "0.1 0.2 0.3 0.4"
+>>> y = "0.1 0.2 0.3 0.5"
+>>> overlap_distance_textsim(x, y) == 0.75
+True
+
+TODO: ngrams generalization
+
 """
 
-overlap_distance_doc = """
+matching_coefficient_doc = """
+The Matching Coefficient is a very simple vector based approach which simply
+counts the number of terms, (dimensions), on which both vectors are non zero.
+This is similar to the vector version of the simple hamming distance
+although position is not taken into account []_,[]_.
+
+.. math::
+
+    match_{coefficients}(X,Y) = |X ∩ Y|
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [Sokal1985] RR Sokal (1985).
+    The principles of numerical taxonomy: twenty-five years later.
+    Computer-assisted bacterial systematics (15). Academic Press.
+
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import matching_coefficient_textsim
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> matching_coefficient_textsim(s1,s2)
+13.0
+
+TODO: ngrams generalization
+
 """
+
+matching_coefficient_pablo_doc = """
+Variation of matching coefficients [Alzahrani2012]_ presented by Pablo Ulacia
+in [Ulacia2016]_.
+
+.. math::
+
+    M(X,Y) = \\frac{|x|-|x∩y|}{max_length(x,y)}
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [Ulacia2016] Pablo Ulacia Villavicencio (2016).
+    Biblioteca de medidas de similitud para textos.
+    Bachelor of Computational Science, UCLV, Cuba.
+
+.. [Alzahrani2012] Alzahrani, S. M.; Salim, N. & Abraham, A (2012).
+    Understanding Plagiarism Linguistic Patterns, Textual Features, and
+    Detection Methods. IEEE Trasactions on systems, man and Cibernetics 42:
+    133-149. IEEE.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> X = "0.1 0.2 0.3 0.4"
+>>> Y = "0.1 0.2 0.3 0.5"
+>>> idioma = 'english'
+>>> matching_coefficient_pablo(X,Y) ==  0.75
+True
+
+TODO: ngrams generalization
+
+"""
+
+containment_similarity_doc = """
+Similar to the Jaccard coefficient, the containment measure calculates the
+intersection of elements between both strings but normalises them only with
+respect to the elements in the suspicious string. Commonly used in text reuse
+field to calculate similarity between
+
+.. math::
+
+    containment(X,Y) = \\frac{|X ∩ Y|}{|X|}
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [Broader1997] Andrei Z. Broder (1997).
+    On the Resemblance and Containment of Documents.
+    In Compression and Complexity of Sequences (SEQUENCES’97), pages 21–29.
+    IEEE Computer Society.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import containment_similarity_textsim
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> containment_similarity_textsim(s1,s2)
+0.444...
+
+:See also:
+
+textsim.jaccard
+
+TODO: ngrams generalization
+
+"""
+
+greedy_string_tiling_doc = """
+When comparing two strings A and B, the aim is to find a maximal set of
+contiguous substrings that have the following properties: each substring occurs
+in both A and B, is as long as possible and does not cover a token already
+covered by some other substring. To avoid spurious matches, a minimum match
+length M is enforced [Wise1993]_, [Wise1996]_.
+
+.. math::
+
+    D()
+
+where :math:`X` and :math:`Y` are the token set of each sentence :math:`s1,s2`
+respectively.
+
+:Citation:
+
+.. [Wise1993] Michael J. Wise. String similarity via greedy string tiling and
+    running Karp-Rabin matching. ftp://ftp.cs.su.oz.au/michaelw/doc/RKR GST.ps,
+    Dept. of CS, University of Sydney, December 1993.
+
+.. [Wise1996] Michael J. Wise (1996).
+   YAP3: Improved detection of similarities in computer program and other texts.
+   ACM SIGCSE Bulletin, 28(1): 130-134. ACM.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import greedy_string_tiling
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> greedy_string_tiling(s1,s2)
+
+TOD: implement this measure
+
+"""
+
+

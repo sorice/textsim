@@ -62,6 +62,7 @@ from ..decorators import score_original, Appender
 from .distances_doc import *
 
 @string2tokenset
+@Appender(jaccard_doc)
 def jaccard_distance_textsim(s1,s2):
     """Textsim implementation of Jaccard or Tanimoto distance.
     """
@@ -260,21 +261,6 @@ def yule_distance_scipy(s1,s2):
     return yule_scipy(s1,s2)
 
 @string2tokenset
-@Appender(matching_scipy.__doc__)
-def matching_coefficient_textsim(s1,s2):
-    """
-                   (|x|-|x∩y|)
-    M(x,y) = 1 -  -----------------
-                   max_longitud(x,y)
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    """
-
-@string2tokenset
 @Appender(dice_coefficient_doc)
 def dice_coefficient_textsim(s1,s2):
     """
@@ -287,27 +273,7 @@ def dice_coefficient_textsim(s1,s2):
 @string2tokenset
 def overlap_distance_textsim(s1,s2):
     """
-    Overlap es una medida que tiende a 1 mientras mayor sea la semejanza entre los
-    dos vectores y su resultado esta entre [0-1]. Este machea completamente si el vector1
-    es un subconjunto del vector2 o viceversa
 
-                |X ∩ Y|
-    OC(x,y)= ---------------
-              min(|x|,|y|)
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> overlap(x, y, "", "", idioma) == 0.75
-    True
-
-    Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
-    Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
     """
 
     if float(min(len(s1),len(s2))) == 0:
@@ -323,7 +289,6 @@ def euclidean_distance_textsim(s1,s2):
     """
     Textsim implementation of Euclidean distance also known as L2.
     """
-
     s1 = list(s1)
     s2 = list(s2)
 
@@ -339,6 +304,26 @@ def euclidean_distance_textsim(s1,s2):
 
 def tf(t,d):
     return float(d.count(t)) / float(sum(d.count(w) for w in set(d)))
+
+@string2tokenset
+@Appender(matching_coefficient_doc)
+def matching_coefficient_textsim(s1,s2):
+    return float(len(s1.union(s2)))
+
+@string2tokenset
+@Appender(matching_coefficient_pablo_doc)
+def matching_coefficient_pablo(s1,s2):
+    """
+    Pablo Ulacia variation of matching coefficient, procedence of the original
+    formula remains unknown.
+    """
+    maxlen = float(max(len(s1),len(s2)))
+    return float(len(s1)-len(s1.intersection(s2)))/maxlen
+
+@string2tokenset
+@Appender(containment_similarity_doc)
+def containment_similarity_textsim(s1,s2):
+    return float(len(s1.intersection(s2)))/len(s1)
 
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."

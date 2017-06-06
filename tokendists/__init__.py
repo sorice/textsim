@@ -1,17 +1,20 @@
-from .tokendists import matching_coefficient_textsim
 from .tokendists import jaccard_distance_textsim
 from .tokendists import dice_coefficient_textsim
 from .tokendists import overlap_distance_textsim
 from .tokendists import euclidean_distance_textsim
+from .tokendists import matching_coefficient_textsim
+from .tokendists import matching_coefficient_pablo
+from .tokendists import containment_similarity_textsim
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
-    'matching_coefficient_textsim': matching_coefficient_textsim,
     'jaccard_distance_textsim': jaccard_distance_textsim,
     'dice_coefficient_textsim': dice_coefficient_textsim,
     'overlap_distance_textsim': overlap_distance_textsim,
     'euclidean_distance_textsim': euclidean_distance_textsim,
-        # 'jaccard_ulacia',
+    'matching_coefficient_textsim': matching_coefficient_textsim,
+    'matching_coefficient_pablo': matching_coefficient_pablo,
+    'containment_similarity_textsim': containment_similarity_textsim,
     }
 
 #Import nltk token distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -59,8 +62,9 @@ finally:
     if not ScipyImportError:
         from .tokendists import (jaccard_distance_scipy,
                             braycurtis_distance_scipy, canberra_distance_scipy,
-                            chebyshev_distance_scipy,
-                            correlation_distance_scipy, dice_distance_scipy,
+                            chebyshev_distance_scipy, cityblock_distance_scipy,
+                            correlation_distance_scipy, cosine_distance_scipy,
+                            dice_distance_scipy, euclidean_distance_scipy,
                             hamming_distance_scipy, kulsinski_distance_scipy,
                             mahalanobis_distance_scipy, matching_distance_scipy,
                             minkowski_distance_scipy,
@@ -73,13 +77,16 @@ finally:
                             yule_distance_scipy
                             )
 
-        PAIRED_DISTANCES['jaccard_distance_scipy'] = jaccard_distance_scipy
         PAIRED_DISTANCES['braycurtis_distance_scipy'] = braycurtis_distance_scipy
         PAIRED_DISTANCES['canberra_distance_scipy'] = canberra_distance_scipy
         PAIRED_DISTANCES['chebyshev_distance_scipy'] = chebyshev_distance_scipy
+        PAIRED_DISTANCES['cityblock_distance_scipy'] = cityblock_distance_scipy
         PAIRED_DISTANCES['correlation_distance_scipy'] = correlation_distance_scipy
+        PAIRED_DISTANCES['cosine_distance_scipy'] = cosine_distance_scipy
         PAIRED_DISTANCES['dice_distance_scipy'] = dice_distance_scipy
+        PAIRED_DISTANCES['euclidean_distance_scipy'] = euclidean_distance_scipy
         PAIRED_DISTANCES['hamming_distance_scipy'] = hamming_distance_scipy
+        PAIRED_DISTANCES['jaccard_distance_scipy'] = jaccard_distance_scipy
         PAIRED_DISTANCES['kulsinski_distance_scipy'] = kulsinski_distance_scipy
         PAIRED_DISTANCES['mahalanobis_distance_scipy'] = mahalanobis_distance_scipy
         PAIRED_DISTANCES['matching_distance_scipy'] = matching_distance_scipy
@@ -113,7 +120,6 @@ __not_implemented__ = [
     'Skew divergence',
     'Tau distance',
     'Q-gram distance',            #se puede implementar fácil
-    'Containment distance',
     'Q-gram Overlap',
     'Skip-grams distance',
     'Greedy String Tiling'
