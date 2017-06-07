@@ -1,0 +1,4 @@
+{
+  "test_stringdists.py": true,
+  "test_stringdists2.py::Testchardists::test_lcs_similarity": true
+}

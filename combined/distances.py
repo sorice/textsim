@@ -18,7 +18,7 @@ __author__ = 'Abel Meneses-Abad'
 
 import nltk
 from nltk.corpus import wordnet as ws
-from ..stringdists import damerau_levenshtein_distance_textsim as damerau_levenshtein_distance
+from ..stringdists import damerau_levenshtein_similarity_textsim as damerau_levenshtein_distance
 from ..decorators import string2tokenset
 
 @string2tokenset

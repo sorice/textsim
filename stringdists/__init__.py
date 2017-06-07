@@ -1,9 +1,9 @@
-from .stringdists import (lcs_distance, lcs_similarity,
+from .distances import (lcs_distance, lcs_similarity,
                             damerau_levenshtein_similarity_textsim,
                             smith_waterman_distance,smith_waterman_similarity,
                             needleman_wunch_distance,
                             needleman_wunch_similarity)
-#from .stringdists import damerau_levenshtein_distance_textsim as damerau_levenshtein_distance
+#from .distances import damerau_levenshtein_distance_textsim as damerau_levenshtein_distance
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -27,7 +27,7 @@ except ImportError:
     pass
 finally:
     if not NLTKImportError:
-        from .stringdists import (binary_distance, edit_distance_nltk,
+        from .distances import (binary_distance, edit_distance_nltk,
                                 edit_similarity_nltk)
 
         PAIRED_DISTANCES['binary_distance'] = binary_distance
@@ -43,7 +43,7 @@ except:
     pass
 finally:
     if not JellyfishImportError:
-        from .stringdists import (levenshtein_similarity_jellyfish,
+        from .distances import (levenshtein_similarity_jellyfish,
                                 levenshtein_distance_jellyfish,
                                 match_rating_comparison, jaro_distance,
                                 jaro_winkler_distance, hamming_distance,
@@ -57,9 +57,9 @@ finally:
         PAIRED_DISTANCES['damerau_levenshtein_distance_jellyfish'] = damerau_levenshtein_distance_jellyfish
         PAIRED_DISTANCES['match_rating_comparison'] = match_rating_comparison
 
-from .stringdists import (levenshtein_distance_pattern,
+from .distances import (levenshtein_distance_pattern,
                         levenshtein_similarity_pattern)
-from .stringdists import dice_coefficient_pattern as dice_coefficient
+from .distances import dice_coefficient_pattern as dice_coefficient
 
 PAIRED_DISTANCES['levenshtein_distance_pattern'] = levenshtein_distance_pattern
 PAIRED_DISTANCES['levenshtein_similarity_pattern'] = levenshtein_similarity_pattern
@@ -68,11 +68,11 @@ PAIRED_DISTANCES['dice_coefficient'] = dice_coefficient
 #After performance we compute result and stablished default edit, levenshtein
 #damerau-levenshtein
 
-from .stringdists import levenshtein_similarity_jellyfish as levenshtein_similarity
-from .stringdists import levenshtein_similarity_jellyfish as edit_similarity
-from .stringdists import levenshtein_similarity_pattern as damerau_levenshtein_similarity
-from .stringdists import levenshtein_distance_pattern as levenshtein_distance
-from .stringdists import levenshtein_distance_pattern as edit_distance
+from .distances import levenshtein_similarity_jellyfish as levenshtein_similarity
+from .distances import levenshtein_similarity_jellyfish as edit_similarity
+from .distances import levenshtein_similarity_pattern as damerau_levenshtein_similarity
+from .distances import levenshtein_distance_pattern as levenshtein_distance
+from .distances import levenshtein_distance_pattern as edit_distance
 
 PAIRED_DISTANCES['levenshtein_similarity'] = levenshtein_similarity
 PAIRED_DISTANCES['edit_similarity'] = edit_similarity
@@ -84,6 +84,8 @@ PAIRED_DISTANCES['edit_distance'] = edit_distance
 __all__ = []
 for distance in PAIRED_DISTANCES:
 	__all__.append(distance)
+
+from .distances import lcs
 
 __not_implemented__ = [
     'Gotoh distance',
