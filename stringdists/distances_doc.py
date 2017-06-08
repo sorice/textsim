@@ -381,14 +381,11 @@ value.
 
 :Examples:
 
->>> from textsim.strindists import smith_waterman_distance
+>>> from textsim.stringdists import smith_waterman_distance
 >>> s1 = "aaaa mnop zzzz"
 >>> s2 = "bbbb mnop yyyy"
->>> smith_waterman_distance(s1,s2)
-6.0
->>> from textsim.strindists import smith_waterman_similarity
->>> smith_waterman_similarity(s1,s2)
-1.0
+>>> smith_waterman_distance (s1,s2, match=2,mismatch=-1,gap_cost=1)
+12.0
 
 """
 

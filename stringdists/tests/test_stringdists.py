@@ -129,11 +129,12 @@ def test_dice_coefficient_pattern(ds, s1, s2, value):
     value = float(value)
     assertAlmostEqual(ds.dice_coefficient_pattern(s1, s2), value, places=3)
 
-#Tests for swalign
+#Tests for smith_waterman_distance
 
-#smith_waterman_distance
-
-#smith_waterman_similarity
+@pytest.mark.parametrize('s1, s2,value', _load_data('smith_waterman'), ids=str)
+def test_smith_waterman_distance(ds, s1, s2, value):
+    value = float(value)
+    assert ds.smith_waterman_distance(s1, s2, 2, -1, 1) == value
 
 #Tests for self Textsim distances
 

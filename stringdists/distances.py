@@ -34,7 +34,7 @@ from ..decorators import score_original, Appender
 from .distances_doc import *
 from ..utils import bigrams
 
-from .swalign import NucleotideScoringMatrix, LocalAlignment
+from .smith_waterman import SmithWaterman
 from array import array
 
 def lcs(s1, s2):
@@ -191,21 +191,12 @@ def dice_coefficient_pattern(s1,s2):
 
 #From swalign package
 @Appender(smith_waterman_dist_doc)
-def smith_waterman_distance(s1,s2,match=2,mismatch=-1,gap_cost=-1):
+def smith_waterman_distance(s1,s2,match=2,mismatch=-1,gap_cost=1):
     """Smith-Waterman distance.
     """
-    scoring = NucleotideScoringMatrix(match, mismatch)
-    sw = LocalAlignment(scoring,gap_cost)
-    return float(sw.align(s1,s2).matches)
-
-@Appender(smith_waterman_dist_doc)
-def smith_waterman_similarity(s1,s2,match=2,mismatch=-1,gap_cost=-1):
-    """Smith-Waterman distance divided by length of matches + mismatches.
-    """
-    scoring = NucleotideScoringMatrix(match, mismatch)
-    sw = LocalAlignment(scoring,gap_cost)
-    total=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
-    return float(sw.align(s1,s2).matches)/total
+    aligned = SmithWaterman(gap_cost=gap_cost,
+            sim_func=lambda s1, s2: (int(match if s1 == s2 else mismatch)))
+    return aligned.get_raw_score(s1,s2)
 
 @Appender(dice_doc)
 def sorensen_distance_textsim(s1, s2):

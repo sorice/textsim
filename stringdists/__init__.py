@@ -1,6 +1,6 @@
 from .distances import (lcs, lcs_distance, lcs_similarity,
                             damerau_levenshtein_distance_textsim,
-                            smith_waterman_distance,smith_waterman_similarity,
+                            smith_waterman_distance,
                             sorensen_distance_textsim,
                             needleman_wunch_distance,
                             needleman_wunch_similarity)
@@ -12,7 +12,6 @@ PAIRED_DISTANCES = {
     'lcs_similarity': lcs_similarity,
     'damerau_levenshtein_distance_textsim': damerau_levenshtein_distance_textsim,
     'smith_waterman_distance': smith_waterman_distance,
-    'smith_waterman_similarity': smith_waterman_similarity,
     'sorensen_distance_textsim': sorensen_distance_textsim,
     'needleman_wunch_distance': needleman_wunch_distance,
     'needleman_wunch_similarity': needleman_wunch_similarity,
