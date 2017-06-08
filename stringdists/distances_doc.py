@@ -339,14 +339,17 @@ True
 """
 
 smith_waterman_dist_doc = """
-Similar to Edit distance ranking operations to align both compared strings.
-This function have two additional parameters: match and mismatch to weight the
-values if chars match or not. The algorithm stablished a gap cost for char
-insertion and deletion.
+Similar to Edit distance ranking operations to optimal aligned both compared
+strings, in this case convert s2 in s1. This distance indicates de longest
+substring that match in both strings.
+
+This function have two additional parameters: match
+and mismatch to weight the values if chars match or not. The algorithm
+stablished a gap cost for char insertion and deletion.
 
 .. math:
 
-    D(i,j) = max(d(i-1,j-1)-d(s_i,t_j),d_L(i-1,j)+1,d_L(i,j-1)+1)
+    D(i,j) = max(d(i-1,j-1)-d(x_i,y_j),d_L(i-1,j)+1,d_L(i,j-1)+1)
 
 where :math:`D(i,j)` is maximum value over all i,j in table. :math:`X,Y` are
 the initial sentences and :math:`x = x_1...x_m` and :math:`y = y_1...y_n` are
@@ -373,7 +376,7 @@ value.
 :type s1, s2: str
 :param match, mismatch: context dependent substitution cost
 :type match, mismatch: int, default values 2,-1
-:param G: gap cost value, defauld value -1
+:param G: gap cost value, default value 1
 :rtype: float
 
 :Examples:

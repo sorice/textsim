@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 String Similarity Distances
@@ -33,8 +32,10 @@ from .pattern import dice_coefficient as dice_coefficient_pattern2
 
 from ..decorators import score_original, Appender
 from .distances_doc import *
+from ..utils import bigrams
 
 from .swalign import NucleotideScoringMatrix, LocalAlignment
+from array import array
 
 def lcs(s1, s2):
     """Longest Common Substring
@@ -69,6 +70,7 @@ def lcs_distance(s1,s2):
     """
     return len(lcs(s1,s2))
 
+@Appender(lcs.__doc__)
 def lcs_similarity(s1,s2):
     """Longest Common Substring Similarity
     """
@@ -76,7 +78,8 @@ def lcs_similarity(s1,s2):
     p,q = LCS/s1.__len__(), LCS/s2.__len__()
     return float(2* p * q/( p + q ))
 
-def damerau_levenshtein_similarity_textsim(s1, s2):
+@Appender(damerau_levenshtein_dist_doc)
+def damerau_levenshtein_distance_textsim(s1, s2):
     """Damerau variation of Levenshtein distance.
     """
 
@@ -102,9 +105,7 @@ def damerau_levenshtein_similarity_textsim(s1, s2):
             if i and j and s1[i]==s2[j-1] and s1[i-1] == s2[j]:
                 d[(i,j)] = min (d[(i,j)], d[i-2,j-2] + cost) # transposition
 
-    lengthmax = max(s1.__len__(), s2.__len__())
-
-    return 1-float(d[lenstr1-1,lenstr2-1])/lengthmax
+    return float(d[lenstr1-1,lenstr2-1])
 
 # if not NLTKImportError:
 @Appender(binary_distance_nltk.__doc__)
@@ -120,12 +121,11 @@ def edit_distance_nltk(s1,s2):
     """
     return edit_distance_nltk2(s1,s2)
 
-@score_original
 @Appender(edit_similarity_doc)
 def edit_similarity_nltk(s1,s2):
     """NLTK implementation of Levenshtein similarity.
     """
-    return edit_distance_nltk2(s1,s2)
+    return 1 - edit_distance_nltk2(s1,s2)/float(max(len(s1),len(s2),1.0))
 
 #from Jellyfish package
 @Appender(edit_distance_doc)
@@ -134,12 +134,11 @@ def levenshtein_distance_jellyfish(s1,s2):
     """
     return levenshtein_distance_jellyfish2(s1,s2)
 
-@score_original
 @Appender(edit_similarity_doc)
 def levenshtein_similarity_jellyfish(s1,s2):
     """Levenshtein similarity based on Jellyfish Levenshtein distance.
     """
-    return levenshtein_distance_jellyfish2(s1,s2)
+    return 1 - levenshtein_distance_jellyfish(s1,s2)/float(max(len(s1),len(s2),1.0))
 
 @Appender(jaro_dist_doc)
 def jaro_distance(s1,s2):
@@ -207,6 +206,17 @@ def smith_waterman_similarity(s1,s2,match=2,mismatch=-1,gap_cost=-1):
     sw = LocalAlignment(scoring,gap_cost)
     total=sw.align(s1,s2).matches+sw.align(s1,s2).mismatches
     return float(sw.align(s1,s2).matches)/total
+
+@Appender(dice_doc)
+def sorensen_distance_textsim(s1, s2):
+    """Sorensen similarity also known as Dice similarity.
+
+    TODO: generalizar con char ngrams
+    """
+    seq1 = bigrams(s1)
+    seq2 = bigrams(s2)
+    set1, set2 = set(seq1), set(seq2)
+    return 2 * len(set1 & set2) / (float(len(set1) + len(set2)) or 1.0)
 
 @Appender(needleman_wunch_dist_doc)
 def needleman_wunch_distance(s1, s2, gap_cost=2):

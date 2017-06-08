@@ -36,6 +36,9 @@ def string2vector(s1,s2):
     s2 = tdm[1].toarray()
     return s1,s2
 
+def bigrams(s):
+    return set(s[i:i+2] for i in range(len(s)-1))
+
 if __name__ == '__main__':
     print (ts)
     print (time()-t)

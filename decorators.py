@@ -10,7 +10,7 @@ from functools import wraps
 def score_original(func):
     @wraps(func)
     def inner(s1,s2):
-        maxlen = max(s1.__len__(),s2.__len__())
+        maxlen = max(s1.__len__(),s2.__len__(),1.0)
         result = func(s1,s2)/maxlen
         return result
     return inner
