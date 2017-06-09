@@ -145,8 +145,14 @@ def test_needleman_wunsch_distance(ds, s1, s2, gap_cost, value, sim):
 #Tests for self Textsim distances
 
 #lcs
+@pytest.mark.parametrize('s1, s2, value, lcs', _load_data('lcs'), ids=str)
+def test_lcs(ds, s1, s2, value, lcs):
+    assert ds.lcs(s1, s2) == lcs
 
-#lcs_distance
+@pytest.mark.parametrize('s1, s2, value, lcs', _load_data('lcs'), ids=str)
+def test_lcs_distance(ds, s1, s2, value, lcs):
+    value = float(value)
+    assert ds.lcs_distance(s1, s2) == value
 
 #lcs_similarity
 
@@ -163,8 +169,11 @@ def test_sorensen_distance_textsim(ds, s1, s2, value):
 # needleman_wunch_similarity
 @pytest.mark.parametrize('s1, s2, gap_cost, value, sim', _load_data('needleman_wunch'), ids=str)
 def test_needleman_wunsch_similarity(ds, s1, s2, gap_cost, value, sim):
-    if len(s1) == 0: s1 = ''
-    if len(s2) == 0: s2 = ''
     value = float(sim)
     gap_cost = float(gap_cost)
     assertAlmostEqual(ds.needleman_wunsch_similarity(s1, s2, gap_cost), value, places=3)
+
+@pytest.mark.parametrize('s1, s2, value', _load_data('containment'), ids=str)
+def test_containment_distance(ds, s1, s2, value):
+    value = float(value)
+    assertAlmostEqual(ds.containment_distance(s1, s2), value, places=3)

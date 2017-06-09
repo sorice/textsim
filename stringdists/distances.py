@@ -200,7 +200,6 @@ def smith_waterman_distance(s1,s2,match=2,mismatch=-1,gap_cost=1):
             sim_func=lambda s1, s2: (int(match if s1 == s2 else mismatch)))
     return aligned.get_raw_score(s1,s2)
 
-#From py_string package
 @Appender(needleman_wunsch_dist_doc)
 def needleman_wunsch_distance_pystring(s1, s2, gap_cost=2, match=0):
     """Needleman-Wunsch distance also known as Seller metric.
@@ -208,6 +207,8 @@ def needleman_wunsch_distance_pystring(s1, s2, gap_cost=2, match=0):
     aligned = NeedlemanWunsch(gap_cost=-gap_cost,
             sim_func=lambda s1, s2: (int(match if s1 == s2 else gap_cost)))
     return aligned.get_raw_score(s1,s2)
+
+#Textsim self distances
 
 @Appender(dice_doc)
 def sorensen_distance_textsim(s1, s2):
@@ -263,6 +264,17 @@ def needleman_wunsch_similarity(s1, s2, gap_cost = 2, match = 0):
     sim = 2 * p * q / (p + q) if p + q > 0 else 0.
 
     return sim
+
+@Appender('')
+def containment_distance(s1, s2):
+    """Containment Similarity.
+
+    TODO: generalizar con char ngrams
+    """
+    seq1 = bigrams(s1)
+    seq2 = bigrams(s2)
+    set1, set2 = set(seq1), set(seq2)
+    return len(set1 & set2) / (float(len(set1)) or 1.0)
 
 if __name__ == '__main__':
     s1=input("Input text A:")

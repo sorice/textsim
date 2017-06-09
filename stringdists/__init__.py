@@ -3,8 +3,9 @@ from .distances import (lcs, lcs_distance, lcs_similarity,
                             smith_waterman_distance,
                             sorensen_distance_textsim,
                             needleman_wunsch_distance_pystring,
-                            needleman_wunsch_distance_textsim,
-                            needleman_wunsch_similarity)
+                            needleman_wunsch_similarity,
+                            containment_distance,
+                            )
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -15,8 +16,8 @@ PAIRED_DISTANCES = {
     'smith_waterman_distance': smith_waterman_distance,
     'sorensen_distance_textsim': sorensen_distance_textsim,
     'needleman_wunsch_distance_pystring': needleman_wunsch_distance_pystring,
-    'needleman_wunsch_distance_textsim': needleman_wunsch_distance_textsim,
     'needleman_wunsch_similarity': needleman_wunsch_similarity,
+    'containment_distance': containment_distance,
     }
 
 #Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -96,5 +97,8 @@ __not_implemented__ = [
     'Gotoh distance',
     'Monge Elkan distance',
     'N-grams Overlap',
+]
+
+__not_documented__ = [
     'Containment distance'
 ]
