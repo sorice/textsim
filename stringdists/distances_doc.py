@@ -50,8 +50,7 @@ in other cases.
 
 :param s1, s2: The strings to be analysed
 :param transpositions: Whether to allow transposition edits
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :type transpositions: bool
 :rtype: int
 
@@ -60,6 +59,7 @@ in other cases.
 >>> from nltk.metrics import edit_distance
 >>> s1 = 'thisisatest'
 >>> s2 = 'testing123testing'
+>>> edit_distance(s1,s2)
 11
 
 """
@@ -82,15 +82,15 @@ and :math:`s2`.
     Soviet Physics Doklady, 10(8):707–710.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
 
->>> from nltk.metrics import edit_distance
+>>> from textsim.stringdists import edit_similarity_nltk
 >>> s1 = 'thisisatest'
 >>> s2 = 'testing123testing'
+>>> edit_similarity_nltk(s1,s2)
 11
 
 """
@@ -119,8 +119,7 @@ respectively.
     American Statistical Society 64:1183-1210. 1989. Publisher Taylor & Francis.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -128,6 +127,7 @@ respectively.
 >>> from textsim.jellyfish import jaro_distance
 >>> s1 = 'dixon'
 >>> s2 = 'dicksonx'
+>>> jaro_distance(s1,s2)
 0.767...
 """
 
@@ -151,8 +151,7 @@ length of the longest common prefix of X and Y.
     In Proceedings of the Survey Research Methods Section, pages 354–359.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -160,6 +159,7 @@ length of the longest common prefix of X and Y.
 >>> from textsim.jellyfish import jaro_distance
 >>> s1 = 'dwayne'
 >>> s2 = 'duane'
+>>> jaro_distance(s1,s2)
 0.84...
 """
 
@@ -181,8 +181,7 @@ Where :math:`x_i,y_i` are the characters of strings :math:`X,Y` respectively.
     correcting codes". Bell System Technical Journal 29 (2): 147–160, MR 0035935.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -190,6 +189,7 @@ Where :math:`x_i,y_i` are the characters of strings :math:`X,Y` respectively.
 >>> from textsim.jellyfish import hamming_distance
 >>> s1 = 'testing'
 >>> s2 = 'this is a test'
+>>> hamming_distance(s1,s2)
 13
 """
 
@@ -208,8 +208,7 @@ deletion and one insertion).
 and correction of spelling errors. Commun. ACM 7, 3 (Mar. 1964), 171–176.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -217,6 +216,7 @@ and correction of spelling errors. Commun. ACM 7, 3 (Mar. 1964), 171–176.
 >>> from textsim.jellyfish import damerau_levenshtein_distance
 >>> s1 = 'cape sand recycling'
 >>> s2 = 'edith ann graham'
+>>> damerau_levenshtein_distance(s1,s2)
 17
 """
 
@@ -224,8 +224,7 @@ match_rating_comparison_doc = """
 Binary comparison.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -233,10 +232,11 @@ Binary comparison.
 >>> from textsim.jellyfish import match_rating_comparison
 >>> s1 = 'Catherine'
 >>> s2 = 'Kathryn'
+>>> match_rating_comparison(s1,s2)
 True
 """
 
-needleman_wunch_dist_doc = """
+needleman_wunsch_dist_doc = """
 Each of fixed cost q > 0, and character replacements, where the cost of
 replacement of i by j is d(i, j). This metric is the minimal total cost of
 transforming x into y by these operations. Equivalently, it is:
@@ -258,6 +258,12 @@ strings :math:`x*` and :math:`y*` shrink to x and y, respectively.
 Where :math:`d(i,j)` is a function whereby :math:`d(c,d)=0` if :math:`c=d`, G
 in other cases.
 
+Operations:
+
+    * :math:`D(i-1,j-1) + d(x_i,y_j)` if SUBST/COPY
+    * :math:`D(i-1,j) + G` if INSERT
+    * :math:`D(i,j-1) + G` if DELETE
+
 :Citation:
 
 .. [Needleman1970] Needleman, S. B. & Wunsch, C. D. A general method applicable
@@ -265,15 +271,16 @@ in other cases.
     Journal of Molecular Biology, 1970, 48(3): 443-453.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
+:param G: gap cost value, default value 2
 :rtype: float
 
 :Examples:
 
->>> from textsim.jellyfish import needleman_wunch_distance
+>>> from textsim.jellyfish import needleman_wunsch_distance
 >>> s1 = 'abcdefg'
 >>> s2 = 'bcdfgh'
+>>> needleman_wunsch_distance(s1,s2)
 5
 """
 
@@ -291,9 +298,9 @@ respectively and
 
 .. math::
 
-    L(i,j) = \\begin{cases} 0                      & {if\ i=0\ or\ j=0}
-                        \\\ 1+L(i-1,j-1)           & {x_i = y_j}
-                        \\\ max(L(i-1,j),L(i,j-1)) & otherwise \end{cases}
+    L(i,j) = \\begin{cases} 0          & {if\ i=0\ or\ j=0}
+            \\\ 1+L(i-1,j-1)           & {x_i = y_j}
+            \\\ max(L(i-1,j),L(i,j-1)) & otherwise \end{cases}
 
 :Citation:
 
@@ -302,8 +309,7 @@ respectively and
     Information Processing Letters, Elsevier, 1986, 23(5): 305-310.
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: str
 
 :Examples:
@@ -321,8 +327,7 @@ Given the longest common substring (LCS) between X and Y, the lcs_similarity
 is the harmonic mean of the LCS/len(X) and LCS/len(Y).
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:
@@ -330,7 +335,7 @@ is the harmonic mean of the LCS/len(X) and LCS/len(Y).
 >>> from textsim.strindists import lcs, lcs_similarity
 >>> s1 = "jellyfish"
 >>> s2 = "smellyfishs"
->>>lcs_similarity(s1,s2) == 0.7272727272727273
+>>> lcs_similarity(s1,s2) == 0.7272727272727273
 True
 
 :See also:
@@ -410,8 +415,7 @@ internaly.
     Journal of Ecology 26(3): 297-302. Wiley Online Library
 
 :param s1, s2: The strings to be analysed
-:type s1: str
-:type s2: str
+:type s1, s2: str
 :rtype: float
 
 :Examples:

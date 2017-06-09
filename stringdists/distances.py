@@ -35,7 +35,9 @@ from .distances_doc import *
 from ..utils import bigrams
 
 from .smith_waterman import SmithWaterman
-from array import array
+from .needleman_wunsch import NeedlemanWunsch
+import numpy as np
+
 
 def lcs(s1, s2):
     """Longest Common Substring
@@ -189,13 +191,22 @@ def dice_coefficient_pattern(s1,s2):
     """
     return dice_coefficient_pattern2(s1,s2)
 
-#From swalign package
+#From py_string package
 @Appender(smith_waterman_dist_doc)
 def smith_waterman_distance(s1,s2,match=2,mismatch=-1,gap_cost=1):
     """Smith-Waterman distance.
     """
     aligned = SmithWaterman(gap_cost=gap_cost,
             sim_func=lambda s1, s2: (int(match if s1 == s2 else mismatch)))
+    return aligned.get_raw_score(s1,s2)
+
+#From py_string package
+@Appender(needleman_wunsch_dist_doc)
+def needleman_wunsch_distance_pystring(s1, s2, gap_cost=2, match=0):
+    """Needleman-Wunsch distance also known as Seller metric.
+    """
+    aligned = NeedlemanWunsch(gap_cost=-gap_cost,
+            sim_func=lambda s1, s2: (int(match if s1 == s2 else gap_cost)))
     return aligned.get_raw_score(s1,s2)
 
 @Appender(dice_doc)
@@ -209,10 +220,11 @@ def sorensen_distance_textsim(s1, s2):
     set1, set2 = set(seq1), set(seq2)
     return 2 * len(set1 & set2) / (float(len(set1) + len(set2)) or 1.0)
 
-@Appender(needleman_wunch_dist_doc)
-def needleman_wunch_distance(s1, s2, gap_cost=2):
-    """Needleman Wunch distance.
+@Appender(needleman_wunsch_dist_doc)
+def needleman_wunsch_distance_textsim(s1, s2, gap_cost=2):
+    """Needleman Wunsch distance.
     """
+    dist_mat = np.zeros((len(s1) + 1, len(s2) + 1), dtype=np.float)
 
     if isinstance(s1, bytes) or isinstance(s2, bytes):
         raise TypeError(_no_bytes_err)
@@ -236,16 +248,21 @@ def needleman_wunch_distance(s1, s2, gap_cost=2):
             insertion = cur[c-1] + gap_cost
             edit = prev[c-1] + (0 if s1[r-1] == s2[c-1] else gap_cost)
             cur[c] = min(edit, deletion, insertion)
+            dist_mat[r, c] = cur[c]
 
     return cur[-1]
 
-
-@score_original
-@Appender(needleman_wunch_dist_doc)
-def needleman_wunch_similarity(s1,s2):
-    """Needleman Wunch distance divided by the maximal length of both strings.
+@Appender(needleman_wunsch_dist_doc)
+def needleman_wunsch_similarity(s1, s2, gap_cost = 2, match = 0):
+    """Is defined as a harmonic mean of Needleman Wunsch distance divided by the
+    length of both strings.
     """
-    return needleman_wunch_distance(s1,s2)
+    p = needleman_wunsch_distance_pystring(s1,s2)/len(s1)
+    q = needleman_wunsch_distance_pystring(s1,s2)/len(s2)
+
+    sim = 2 * p * q / (p + q) if p + q > 0 else 0.
+
+    return sim
 
 if __name__ == '__main__':
     s1=input("Input text A:")

@@ -2,8 +2,9 @@ from .distances import (lcs, lcs_distance, lcs_similarity,
                             damerau_levenshtein_distance_textsim,
                             smith_waterman_distance,
                             sorensen_distance_textsim,
-                            needleman_wunch_distance,
-                            needleman_wunch_similarity)
+                            needleman_wunsch_distance_pystring,
+                            needleman_wunsch_distance_textsim,
+                            needleman_wunsch_similarity)
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -13,8 +14,9 @@ PAIRED_DISTANCES = {
     'damerau_levenshtein_distance_textsim': damerau_levenshtein_distance_textsim,
     'smith_waterman_distance': smith_waterman_distance,
     'sorensen_distance_textsim': sorensen_distance_textsim,
-    'needleman_wunch_distance': needleman_wunch_distance,
-    'needleman_wunch_similarity': needleman_wunch_similarity,
+    'needleman_wunsch_distance_pystring': needleman_wunsch_distance_pystring,
+    'needleman_wunsch_distance_textsim': needleman_wunsch_distance_textsim,
+    'needleman_wunsch_similarity': needleman_wunsch_similarity,
     }
 
 #Import nltk distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -75,6 +77,7 @@ from .distances import damerau_levenshtein_distance_jellyfish as damerau_levensh
 from .distances import levenshtein_distance_pattern as levenshtein_distance
 from .distances import levenshtein_distance_pattern as edit_distance
 from .distances import dice_coefficient_pattern as dice_coefficient
+from .distances import needleman_wunsch_distance_pystring as needleman_wunsch_distance
 
 PAIRED_DISTANCES['levenshtein_similarity'] = levenshtein_similarity
 PAIRED_DISTANCES['edit_similarity'] = edit_similarity
@@ -82,6 +85,7 @@ PAIRED_DISTANCES['damerau_levenshtein_distance'] = damerau_levenshtein_distance
 PAIRED_DISTANCES['levenshtein_distance'] = levenshtein_distance
 PAIRED_DISTANCES['edit_distance'] = edit_distance
 PAIRED_DISTANCES['dice_coefficient'] = dice_coefficient
+PAIRED_DISTANCES['needleman_wunsch_distance'] = needleman_wunsch_distance
 
 # append all verified distances in module importing argument ALL
 __all__ = []
@@ -91,6 +95,6 @@ for distance in PAIRED_DISTANCES:
 __not_implemented__ = [
     'Gotoh distance',
     'Monge Elkan distance',
-    'N-grams Overlap'
+    'N-grams Overlap',
     'Containment distance'
 ]

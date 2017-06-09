@@ -129,12 +129,18 @@ def test_dice_coefficient_pattern(ds, s1, s2, value):
     value = float(value)
     assertAlmostEqual(ds.dice_coefficient_pattern(s1, s2), value, places=3)
 
-#Tests for smith_waterman_distance
+#Tests for pystring package distances
 
 @pytest.mark.parametrize('s1, s2,value', _load_data('smith_waterman'), ids=str)
 def test_smith_waterman_distance(ds, s1, s2, value):
     value = float(value)
     assert ds.smith_waterman_distance(s1, s2, 2, -1, 1) == value
+
+@pytest.mark.parametrize('s1, s2, gap_cost, value, sim', _load_data('needleman_wunch'), ids=str)
+def test_needleman_wunsch_distance(ds, s1, s2, gap_cost, value, sim):
+    value = float(value)
+    gap_cost=float(gap_cost)
+    assert ds.needleman_wunsch_distance_pystring(s1, s2, gap_cost) == value
 
 #Tests for self Textsim distances
 
@@ -154,6 +160,11 @@ def test_sorensen_distance_textsim(ds, s1, s2, value):
     value = float(value)
     assertAlmostEqual(ds.sorensen_distance_textsim(s1, s2), value, places=3)
 
-# needleman_wunch_distance
-
 # needleman_wunch_similarity
+@pytest.mark.parametrize('s1, s2, gap_cost, value, sim', _load_data('needleman_wunch'), ids=str)
+def test_needleman_wunsch_similarity(ds, s1, s2, gap_cost, value, sim):
+    if len(s1) == 0: s1 = ''
+    if len(s2) == 0: s2 = ''
+    value = float(sim)
+    gap_cost = float(gap_cost)
+    assertAlmostEqual(ds.needleman_wunsch_similarity(s1, s2, gap_cost), value, places=3)
