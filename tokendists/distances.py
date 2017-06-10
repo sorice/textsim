@@ -259,6 +259,7 @@ def yule_distance_scipy(s1,s2):
     ""
     return yule_scipy(s1,s2)
 
+#Textsim self tokendists implementations
 @string2tokenset
 @Appender(matching_scipy.__doc__)
 def matching_coefficient_textsim(s1,s2):
@@ -273,6 +274,7 @@ def matching_coefficient_textsim(s1,s2):
     @rtype: float
 
     """
+    return float(len(s1.union(s2)))
 
 @string2tokenset
 @Appender(dice_coefficient_doc)
@@ -339,6 +341,16 @@ def euclidean_distance_textsim(s1,s2):
 
 def tf(t,d):
     return float(d.count(t)) / float(sum(d.count(w) for w in set(d)))
+
+@string2tokenset
+@Appender(matching_coefficient_pablo_doc)
+def matching_coefficient_pablo(s1,s2):
+    """
+    Pablo Ulacia variation of matching coefficient, procedence of the original
+    formula remains unknown.
+    """
+    maxlen = float(max(len(s1),len(s2)))
+    return float(len(s1)-len(s1.intersection(s2)))/maxlen
 
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."

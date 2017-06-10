@@ -1,8 +1,8 @@
-from .tokendists import matching_coefficient_textsim
-from .tokendists import jaccard_distance_textsim
-from .tokendists import dice_coefficient_textsim
-from .tokendists import overlap_distance_textsim
-from .tokendists import euclidean_distance_textsim
+from .distances import matching_coefficient_textsim
+from .distances import jaccard_distance_textsim
+from .distances import dice_coefficient_textsim
+from .distances import overlap_distance_textsim
+from .distances import euclidean_distance_textsim
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -24,7 +24,7 @@ except ImportError:
     pass
 finally:
     if not NLTKImportError:
-        from .tokendists import (jaccard_distance_nltk, masi_distance, interval_distance)
+        from .distances import (jaccard_distance_nltk, masi_distance, interval_distance)
 
         PAIRED_DISTANCES['jaccard_distance_nltk'] = jaccard_distance_nltk
         PAIRED_DISTANCES['masi_distance'] = masi_distance
@@ -39,10 +39,10 @@ except ImportError:
     pass
 finally:
     if not SklearnImportError:
-        from .tokendists import manhattan_distance_sklearn
-        from .tokendists import cosine_distance_sklearn
-        from .tokendists import cosine_similarity_sklearn
-        from .tokendists import euclidean_distance_sklearn
+        from .distances import manhattan_distance_sklearn
+        from .distances import cosine_distance_sklearn
+        from .distances import cosine_similarity_sklearn
+        from .distances import euclidean_distance_sklearn
 
         PAIRED_DISTANCES['manhattan_distance_sklearn'] = manhattan_distance_sklearn
         PAIRED_DISTANCES['cosine_distance_sklearn'] = cosine_distance_sklearn
@@ -57,12 +57,19 @@ except ImportError:
     pass
 finally:
     if not ScipyImportError:
-        from .tokendists import (jaccard_distance_scipy,
-                            braycurtis_distance_scipy, canberra_distance_scipy,
+        from .distances import (braycurtis_distance_scipy,
+                            canberra_distance_scipy,
                             chebyshev_distance_scipy,
-                            correlation_distance_scipy, dice_distance_scipy,
-                            hamming_distance_scipy, kulsinski_distance_scipy,
-                            mahalanobis_distance_scipy, matching_distance_scipy,
+                            cityblock_distance_scipy,
+                            correlation_distance_scipy,
+                            cosine_distance_scipy,
+                            dice_distance_scipy,
+                            euclidean_distance_scipy,
+                            hamming_distance_scipy,
+                            jaccard_distance_scipy,
+                            kulsinski_distance_scipy,
+                            mahalanobis_distance_scipy,
+                            matching_distance_scipy,
                             minkowski_distance_scipy,
                             rogerstanimoto_distance_scipy,
                             russellrao_distance_scipy,
@@ -73,13 +80,16 @@ finally:
                             yule_distance_scipy
                             )
 
-        PAIRED_DISTANCES['jaccard_distance_scipy'] = jaccard_distance_scipy
         PAIRED_DISTANCES['braycurtis_distance_scipy'] = braycurtis_distance_scipy
         PAIRED_DISTANCES['canberra_distance_scipy'] = canberra_distance_scipy
         PAIRED_DISTANCES['chebyshev_distance_scipy'] = chebyshev_distance_scipy
+        PAIRED_DISTANCES['cityblock_distance_scipy'] = cityblock_distance_scipy
         PAIRED_DISTANCES['correlation_distance_scipy'] = correlation_distance_scipy
+        PAIRED_DISTANCES['cosine_distance_scipy'] = cosine_distance_scipy
         PAIRED_DISTANCES['dice_distance_scipy'] = dice_distance_scipy
+        PAIRED_DISTANCES['euclidean_distance_scipy'] = euclidean_distance_scipy
         PAIRED_DISTANCES['hamming_distance_scipy'] = hamming_distance_scipy
+        PAIRED_DISTANCES['jaccard_distance_scipy'] = jaccard_distance_scipy
         PAIRED_DISTANCES['kulsinski_distance_scipy'] = kulsinski_distance_scipy
         PAIRED_DISTANCES['mahalanobis_distance_scipy'] = mahalanobis_distance_scipy
         PAIRED_DISTANCES['matching_distance_scipy'] = matching_distance_scipy
@@ -94,7 +104,7 @@ finally:
 
 #After performance we compute result and stablished default edit, levenshtein
 #damerau-levenshtein
-# from .tokendists import jaccard_distance_XXX as jaccard_distance
+# from .distances import jaccard_distance_XXX as jaccard_distance
 
 # PAIRED_DISTANCES['jaccard_distance'] = jaccard_distance
 
