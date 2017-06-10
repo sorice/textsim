@@ -66,13 +66,13 @@ def lcs(s1, s2):
             y -= 1
     return result
 
-@Appender(lcs.__doc__)
+@Appender(lcs_doc)
 def lcs_distance(s1,s2):
     """Lenght of LCS.
     """
     return len(lcs(s1,s2))
 
-@Appender(lcs.__doc__)
+@Appender(lcs_similarity_doc)
 def lcs_similarity(s1,s2):
     """Longest Common Substring Similarity
     """
@@ -265,11 +265,9 @@ def needleman_wunsch_similarity(s1, s2, gap_cost = 2, match = 0):
 
     return sim
 
-@Appender('')
+@Appender(containment_similarity_doc)
 def containment_distance(s1, s2):
-    """Containment Similarity.
-
-    TODO: generalizar con char ngrams
+    """Textsim Containment Similarity implementation.
     """
     seq1 = bigrams(s1)
     seq2 = bigrams(s2)

@@ -4,7 +4,7 @@ from .distances import overlap_distance_textsim
 from .distances import euclidean_distance_textsim
 from .distances import matching_coefficient_textsim
 from .distances import matching_coefficient_pablo
-from .distances import containment_similarity_textsim
+from .distances import containment_similarity
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -14,7 +14,7 @@ PAIRED_DISTANCES = {
     'euclidean_distance_textsim': euclidean_distance_textsim,
     'matching_coefficient_textsim': matching_coefficient_textsim,
     'matching_coefficient_pablo': matching_coefficient_pablo,
-    'containment_similarity_textsim': containment_similarity_textsim,
+    'containment_similarity': containment_similarity,
     }
 
 #Import nltk token distances from ~/nltk/metric/distance.py and modify after with decorators

@@ -401,12 +401,12 @@ have one common bigram "ht" [dice1945]_.
 
 .. math:
 
-    dice(X,Y) = \\frac{2*|2-grams(X) ∩ 2-grams(Y)|}{|2-grams(X)|+|2-grams(Y)|}
+    dice(X,Y) = \\frac{2*|ngrams(X) ∩ ngrams(Y)|}{|ngrams(X)|+|ngrams(Y)|}
 
 
 Where :math:`X` and :math:`Y` are the initial strings to be compare, and
-:math:`2-grams(z)` returns the set of bigrams of the string z. It's implemented
-internaly.
+:math:`ngrams(z)` returns the set of n-grams of the string z. This function is
+implemented internaly.
 
 :Citation:
 
@@ -426,7 +426,46 @@ internaly.
 0.777...
 """
 
-containment_dist_doc = """
+containment_similarity_doc = """
+Similar to the Dice coefficient, the containment measure calculates the
+intersection of n-grams between both strings but normalises them only with
+respect to the elements in the suspicious string. Commonly used in text reuse
+field to calculate similarity between documents.
+
+.. math::
+
+    containment(X,Y) = \\frac{|ngrams(X) ∩ ngrams(Y)|}{|ngrams(X)|}
+
+Where :math:`X` and :math:`Y` are the initial strings to be compare, and
+:math:`ngrams(z)` returns the set of n-grams of the string z. This function is
+implemented internaly.
+
+:Citation:
+
+.. [Broader1997] Andrei Z. Broder (1997).
+    On the Resemblance and Containment of Documents.
+    In Compression and Complexity of Sequences (SEQUENCES’97), pages 21–29.
+    IEEE Computer Society.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import containment_similarity_textsim
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> containment_similarity_textsim(s1,s2)
+0.444...
+
+:See also:
+
+textsim.jaccard
+
+TODO: ngrams generalization
+
 """
 
 
