@@ -229,7 +229,7 @@ def seuclidean_distance_scipy(s1,s2):
     [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
     X = np.vstack([XA, XB])
     V = np.var(X, axis=0, ddof=1)
-    return np.nansum(np.sqrt((XA - XB) ** 2 / V))
+    return np.sqrt(((XA - XB) ** 2 / V).sum())
 
 @string2vec
 @Appender(sokalmichener_scipy.__doc__)
@@ -283,29 +283,6 @@ def overlap_distance_textsim(s1,s2):
     return float(len(s1.intersection(s2)))/(float(min(len(s1),len(s2))) or 1.0)
 
 @string2tokenset
-@Appender(euclidean_dist_doc)
-def euclidean_distance_textsim(s1,s2):
-    """
-    Textsim implementation of Euclidean distance also known as L2.
-    """
-
-    s1 = list(s1)
-    s2 = list(s2)
-
-    suma=0
-    if len(s1)<len(s2):
-        for i in range(len(s1)):
-            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-        return float(1-float(pow(suma,0.5)))
-    else:
-        for i in range(len(s2)):
-            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-        return float(1-float(pow(suma,0.5)))
-
-def tf(t,d):
-    return float(d.count(t)) / (float(sum(d.count(w) for w in set(d))) or 1.0)
-
-@string2tokenset
 @Appender(matching_coefficient_pablo_doc)
 def matching_coefficient_pablo(s1,s2):
     """
@@ -315,8 +292,8 @@ def matching_coefficient_pablo(s1,s2):
     return float(len(s1)-len(s1.intersection(s2)))/(max(len(s1),len(s2)) or 1.0)
 
 @string2tokenset
-@Appender(containment_similarity_doc)
-def containment_similarity(s1, s2):
+@Appender(containment_distance_doc)
+def containment_distance(s1, s2):
     """Textsim implementation of Containment Similarity token-based.
     """
     return len(s1 & s2) / (float(len(s1)) or 1.0)

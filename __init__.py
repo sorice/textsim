@@ -61,5 +61,12 @@ __classifiers__ = [
     'Topic :: Text Processing :: Linguistic',
 ]
 
+from textsim import stringdists
+from textsim import tokendists
 from textsim.stringdists import *
 from textsim.tokendists import *
+
+__all_distances__ = {}
+
+__all_distances__.update(stringdists.__distances__)
+__all_distances__.update(tokendists.__distances__)

@@ -93,6 +93,24 @@ __all__ = []
 for distance in PAIRED_DISTANCES:
 	__all__.append(distance)
 
+__distances__ = {
+'binary_distance':binary_distance,
+'levenshtein_distance':levenshtein_distance,
+'edit_similarity': edit_similarity,
+'damerau_levenshtein_distance':damerau_levenshtein_distance,
+'jaro_distance':jaro_distance,
+'jaro_winkler_distance':jaro_winkler_distance,
+'hamming_distance':hamming_distance,
+'match_rating_comparison':match_rating_comparison,
+'dice_coefficient':dice_coefficient,
+'lcs_distance':lcs_distance,
+'lcs_similarity':lcs_similarity,
+'smith_waterman_distance':smith_waterman_distance,
+'needleman_wunsch_distance':needleman_wunsch_distance,
+'needleman_wunsch_similarity':needleman_wunsch_similarity,
+'containment_distance':containment_distance
+}
+
 __not_implemented__ = [
     'Gotoh distance',
     'Monge Elkan distance',
