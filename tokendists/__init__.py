@@ -1,20 +1,18 @@
 from .distances import jaccard_distance_textsim
 from .distances import dice_coefficient_textsim
 from .distances import overlap_distance_textsim
-from .distances import euclidean_distance_textsim
 from .distances import matching_coefficient_textsim
 from .distances import matching_coefficient_pablo
-from .distances import containment_similarity_textsim
+from .distances import containment_distance as token_containment_distance
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
     'jaccard_distance_textsim': jaccard_distance_textsim,
     'dice_coefficient_textsim': dice_coefficient_textsim,
     'overlap_distance_textsim': overlap_distance_textsim,
-    'euclidean_distance_textsim': euclidean_distance_textsim,
     'matching_coefficient_textsim': matching_coefficient_textsim,
     'matching_coefficient_pablo': matching_coefficient_pablo,
-    'containment_similarity_textsim': containment_similarity_textsim,
+    'token_containment_distance': token_containment_distance,
     }
 
 #Import nltk token distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -107,16 +105,46 @@ finally:
 
 #After performance we compute result and stablished default edit, levenshtein
 #damerau-levenshtein
-# from .distances import jaccard_distance_XXX as jaccard_distance
-
-# PAIRED_DISTANCES['jaccard_distance'] = jaccard_distance
-
-
+from .distances import jaccard_distance_textsim as jaccard_distance
+from .distances import manhattan_distance_sklearn as manhattan_distance
+from .distances import cosine_distance_scipy as cosine_distance
+from .distances import euclidean_distance_scipy as euclidean_distance
 
 # append all verified distances in module importing argument ALL
 __all__ = []
 for distance in PAIRED_DISTANCES:
     __all__.append(distance)
+
+__distances__ = {
+'jaccard_distance': jaccard_distance,
+'dice_coefficient':dice_coefficient_textsim,
+'overlap_distance':overlap_distance_textsim,
+'matching_coefficient':matching_coefficient_textsim,
+'matching_coefficient_pablo':matching_coefficient_pablo,
+'token_containment_distance': token_containment_distance,
+'masi_distance':masi_distance,
+'interval_distance':interval_distance,
+'manhattan_distance':manhattan_distance_sklearn,
+'cosine_distance':cosine_distance_scipy,
+'euclidean_distance':euclidean_distance_scipy,
+'braycurtis_distance':braycurtis_distance_scipy,
+'canberra_distance':canberra_distance_scipy,
+'chebyshev_distance':chebyshev_distance_scipy,
+'correlation_distance':correlation_distance_scipy,
+'dice_distance':dice_distance_scipy,
+'token_hamming_distance':hamming_distance_scipy,
+'kulsinski_distance':kulsinski_distance_scipy,
+'mahalanobis_distance':mahalanobis_distance_scipy,
+'matching_distance':matching_distance_scipy,
+'minkowski_distance':minkowski_distance_scipy,
+'rogerstanimoto_distance':rogerstanimoto_distance_scipy,
+'russellrao_distance':russellrao_distance_scipy,
+'seuclidean_distance':seuclidean_distance_scipy,
+'sokalmichener_distance':sokalmichener_distance_scipy,
+'sokalsneath_distance':sokalsneath_distance_scipy,
+'sqeuclidean_distance':sqeuclidean_distance_scipy,
+'yule_distance':yule_distance_scipy,
+}
 
 __not_implemented__ = [
     'Kullback-Leibler distance',  #test later from scipy.special import kl_div

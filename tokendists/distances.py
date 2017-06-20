@@ -67,11 +67,7 @@ def jaccard_distance_textsim(s1,s2):
     """
     c1 = s1 & s2
     c2 = s1 | s2
-    if len(c2) == 0:
-        result = 'inf'
-    else:
-        result = float(abs(len(c1)-len(c2)))/len(c2)
-    return result
+    return float(abs(len(c1)-len(c2)))/(len(c2) or 1.0)
 
 #from NLTK package if installed
 @string2tokenset
@@ -233,7 +229,7 @@ def seuclidean_distance_scipy(s1,s2):
     [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
     X = np.vstack([XA, XB])
     V = np.var(X, axis=0, ddof=1)
-    return np.nansum(np.sqrt((XA - XB) ** 2 / V))
+    return np.sqrt(((XA - XB) ** 2 / V).sum())
 
 @string2vec
 @Appender(sokalmichener_scipy.__doc__)
@@ -261,18 +257,10 @@ def yule_distance_scipy(s1,s2):
 
 #Textsim self tokendists implementations
 @string2tokenset
-@Appender(matching_scipy.__doc__)
+@Appender(matching_coefficient_doc)
 def matching_coefficient_textsim(s1,s2):
     """
-                   (|x|-|x∩y|)
-    M(x,y) = 1 -  -----------------
-                   max_longitud(x,y)
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
+    Textsim implementation of Matching Coefficient.
     """
     return float(len(s1.union(s2)))
 
@@ -284,63 +272,15 @@ def dice_coefficient_textsim(s1,s2):
     """
     c1 = s1 & s2
     c2 = s1 | s2
-    return 2*(float(len(c1)))/(float(len(c2))+float(len(c2)))
+    return 2*(float(len(c1)))/(float(len(c1)+len(c2)) or 1.0)
 
 @string2tokenset
+@Appender(overlap_distance_doc)
 def overlap_distance_textsim(s1,s2):
     """
-    Overlap es una medida que tiende a 1 mientras mayor sea la semejanza entre los
-    dos vectores y su resultado esta entre [0-1]. Este machea completamente si el vector1
-    es un subconjunto del vector2 o viceversa
-
-                |X ∩ Y|
-    OC(x,y)= ---------------
-              min(|x|,|y|)
-
-    @param s1, s2: Cadenas a analizar
-    @type s1: str
-    @type s2: str
-    @rtype: float
-
-    >>> x = "0.1 0.2 0.3 0.4"
-    >>> y = "0.1 0.2 0.3 0.5"
-    >>> idioma = 'english'
-    >>> overlap(x, y, "", "", idioma) == 0.75
-    True
-
-    Understanding Plagiarism Linguistic Patterns,Textual Features, and Detection Methods
-    Salha M. Alzahrani, Naomie Salim, and Ajith Abraham, Senior Member, IEEE
+    Textsim Overlap distance implementation.
     """
-
-    if float(min(len(s1),len(s2))) == 0:
-        result = 'inf'
-    else:
-        result = float(len(s1.intersection(s2)))/float(min(len(s1),len(s2)))
-
-    return result
-
-@string2tokenset
-@Appender(euclidean_dist_doc)
-def euclidean_distance_textsim(s1,s2):
-    """
-    Textsim implementation of Euclidean distance also known as L2.
-    """
-
-    s1 = list(s1)
-    s2 = list(s2)
-
-    suma=0
-    if len(s1)<len(s2):
-        for i in range(len(s1)):
-            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-        return float(1-float(pow(suma,0.5)))
-    else:
-        for i in range(len(s2)):
-            suma+=pow(tf(s1[i],s1) - tf(s2[i],s2),2)
-        return float(1-float(pow(suma,0.5)))
-
-def tf(t,d):
-    return float(d.count(t)) / float(sum(d.count(w) for w in set(d)))
+    return float(len(s1.intersection(s2)))/(float(min(len(s1),len(s2))) or 1.0)
 
 @string2tokenset
 @Appender(matching_coefficient_pablo_doc)
@@ -349,8 +289,14 @@ def matching_coefficient_pablo(s1,s2):
     Pablo Ulacia variation of matching coefficient, procedence of the original
     formula remains unknown.
     """
-    maxlen = float(max(len(s1),len(s2)))
-    return float(len(s1)-len(s1.intersection(s2)))/maxlen
+    return float(len(s1)-len(s1.intersection(s2)))/(max(len(s1),len(s2)) or 1.0)
+
+@string2tokenset
+@Appender(containment_distance_doc)
+def containment_distance(s1, s2):
+    """Textsim implementation of Containment Similarity token-based.
+    """
+    return len(s1 & s2) / (float(len(s1)) or 1.0)
 
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."

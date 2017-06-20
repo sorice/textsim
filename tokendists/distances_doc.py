@@ -527,11 +527,11 @@ TODO: ngrams generalization
 
 """
 
-containment_similarity_doc = """
+containment_distance_doc = """
 Similar to the Jaccard coefficient, the containment measure calculates the
 intersection of elements between both strings but normalises them only with
 respect to the elements in the suspicious string. Commonly used in text reuse
-field to calculate similarity between
+field to calculate similarity between documents.
 
 .. math::
 
