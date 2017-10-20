@@ -464,9 +464,10 @@ implemented internaly.
 
 textsim.jaccard
 
-TODO: ngrams generalization
+TODO: qgram generalization in characters
 
 """
+
 
 
 

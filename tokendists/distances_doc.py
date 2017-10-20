@@ -608,4 +608,37 @@ TOD: implement this measure
 
 """
 
+qgram_distance_doc = """
+Qgrams are the sub-sets of Q-continuoum tokens in a sentence. E.g. the
+bigrams of the sentence 'Jonh eat fish' are (Jonh,eat) and (eat,fish).
+This kind of representation is very useful for probabilistic models
+like Hiden Markov Models.
 
+.. math::
+
+    qgram(X,Y) = {2*|q(X) ∩ q(Y)| \over |q(X)|+|q(Y)|}
+
+Where :math:`q(X),q(Y)` and :math:`q(X,Y)` are the sizes of multisets of
+all q-grams (sub-sets of tokens of length q) occurring in X, Y and both
+of them, respectively.
+
+:Citation:
+
+.. [ukkonen1992] Esko Ukkonen (1992).
+    Approximate string-matching with q-grams and maximal matches.
+    In Theoretical computer science (92) 1, pages 191-211.
+    Elsevier.
+
+:param s1, s2: The strings to be analysed
+:type s1: str
+:type s2: str
+:rtype: float
+
+:Examples:
+
+>>> from textsim.tokendists import qgram_distance
+>>> s1 = "PCCW's chief operating officer, Mike Butcher, and Alex Arena"
+>>> s2 = "Current Chief Operating Officer Mike Butcher and Group Chief"
+>>> qgram_distance(s1,s2)
+
+"""

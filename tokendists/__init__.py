@@ -4,6 +4,7 @@ from .distances import overlap_distance_textsim
 from .distances import matching_coefficient_textsim
 from .distances import matching_coefficient_pablo
 from .distances import containment_distance as token_containment_distance
+from .distances import qgram_distance
 
 #This dict strategy is based on sklearn.metrics.pairwaise code example
 PAIRED_DISTANCES = {
@@ -13,6 +14,7 @@ PAIRED_DISTANCES = {
     'matching_coefficient_textsim': matching_coefficient_textsim,
     'matching_coefficient_pablo': matching_coefficient_pablo,
     'token_containment_distance': token_containment_distance,
+    'qgram_distance': qgram_distance,
     }
 
 #Import nltk token distances from ~/nltk/metric/distance.py and modify after with decorators
@@ -144,6 +146,7 @@ __distances__ = {
 'sokalsneath_distance':sokalsneath_distance_scipy,
 'sqeuclidean_distance':sqeuclidean_distance_scipy,
 'yule_distance':yule_distance_scipy,
+'qgram_distance':qgram_distance
 }
 
 __not_implemented__ = [
@@ -153,7 +156,6 @@ __not_implemented__ = [
     'Harmonic Mean distance',     #se puede implementar usando numpy
     'Skew divergence',
     'Tau distance',
-    'Q-gram distance',            #se puede implementar fácil
     'Containment distance',
     'Q-gram Overlap',
     'Skip-grams distance',

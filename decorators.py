@@ -4,7 +4,7 @@
 """ This is a basic example about how to implement a decorator function
     that replace de decorated function with the inner function."""
 
-from .utils import string2vector
+from .utils import string2vector, string2ngrams
 from functools import wraps
 
 def score_original(func):
@@ -36,6 +36,19 @@ def string2vec(func):
         result = func(s1,s2)
         return float(result)
     return inner
+
+def string2qgrams(func):
+    @wraps(func)
+    def inner(s1,s2,n):
+        if isinstance(s1,str) and isinstance(s2,str):
+            s1,s2 = string2ngrams(s1,s2,n)
+        else:
+            print('Both values need to be string objects')
+        result = func(s1,s2)
+        return float(result)
+    return inner
+
+
 
 #This is the original code of Appender class from pandas.utils.decorators
 class Appender(object):

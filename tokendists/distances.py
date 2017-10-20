@@ -11,7 +11,7 @@ Based on term/token similarity calculations.
 
 __author__ = 'Abel Meneses-Abad, Pablo Ulacia'
 
-from ..decorators import string2tokenset, string2vec
+from ..decorators import string2tokenset, string2vec, string2qgrams
 
 try:
     from nltk.metrics import jaccard_distance as jaccard_distance_nltk2
@@ -297,6 +297,13 @@ def containment_distance(s1, s2):
     """Textsim implementation of Containment Similarity token-based.
     """
     return len(s1 & s2) / (float(len(s1)) or 1.0)
+
+@string2qgrams
+@Appender(qgram_distance_doc)
+def qgram_distance(s1, s2):
+    """Textsim implementation of Q-gram Similarity distance.
+    """
+    return 2*len(set(s1).intersection(set(s2))) / (float(len(set(s1))+len(set(s2))) or 1.0)
 
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."
