@@ -300,10 +300,13 @@ def containment_distance(s1, s2):
 
 @string2qgrams
 @Appender(qgram_distance_doc)
-def qgram_distance(s1, s2):
+def qgram_distance(s1, s2, **param):
     """Textsim implementation of Q-gram Similarity distance.
     """
-    return 2*len(set(s1).intersection(set(s2))) / (float(len(set(s1))+len(set(s2))) or 1.0)
+    if 'method' in param and param['method'] == 'overlap':
+        return len(set(s1).intersection(set(s2))) / (float(len(set(s1))) or 1.0)
+    else:
+        return 2*len(set(s1).intersection(set(s2))) / (float(len(set(s1))+len(set(s2))) or 1.0)
 
 if __name__ == '__main__':
         v1="PCCW's chief operating officer, Mike Butcher, and Alex Arena, the chief financial officer, will report directly to Mr So."

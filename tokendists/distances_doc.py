@@ -612,7 +612,7 @@ qgram_distance_doc = """
 Qgrams are the sub-sets of Q-continuoum tokens in a sentence. E.g. the
 bigrams of the sentence 'Jonh eat fish' are (Jonh,eat) and (eat,fish).
 This kind of representation is very useful for probabilistic models
-like Hiden Markov Models.
+like Hiden Markov Models.[ukkonen1992]_
 
 .. math::
 
