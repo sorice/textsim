@@ -62,8 +62,12 @@ def _make_ngrams(l, n):
 def string2ngrams(s1,s2,n):
     """Return both strings converted in n-consecutive grams.
     :rtype: deque collection"""
-    A = _make_ngrams(s1.split(),n)
-    B = _make_ngrams(s2.split(),n)
+    if isinstance(s1, str) and isinstance(s2,str):
+        A = _make_ngrams(s1.split(),n)
+        B = _make_ngrams(s2.split(),n)
+    else:
+        A = _make_ngrams(s1,n)
+        B = _make_ngrams(s2,n)
     return deque(A), deque(B)
 
 if __name__ == '__main__':

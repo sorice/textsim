@@ -45,8 +45,13 @@ def string2qgrams(func):
                 s1,s2 = string2ngrams(s1,s2,param['n'])
             else:
                 s1,s2 = string2ngrams(s1,s2,n=1)
+        elif not isinstance(s1,str) and not isinstance(s2,str):
+            if 'n' in param:
+                s1,s2 = string2ngrams(s1,s2,param['n'])
+            else:
+                s1,s2 = string2ngrams(s1,s2,n=1)
         else:
-            print('Both values need to be string objects')
+            print('Both values need to be same type objects')
 
         result = func(s1,s2,**param)
         return float(result)
