@@ -55,8 +55,7 @@ except:
     pass
 
 import numpy as np
-from scipy.spatial.distance import (_copy_arrays_if_base_present,
-                                    _convert_to_double)
+from scipy.spatial.distance import _convert_to_double
 from ..decorators import score_original, Appender
 
 from .distances_doc import *
@@ -191,8 +190,8 @@ def kulsinski_distance_scipy(s1,s2):
 @Appender(mahalanobis_scipy.__doc__)
 def mahalanobis_distance_scipy(s1,s2):
     ""
-    [XA] = _copy_arrays_if_base_present([_convert_to_double(s1)])
-    [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
+    [XA] = _convert_to_double(s1)
+    [XB] = _convert_to_double(s2)
     X = np.vstack([XA, XB])
     VI = np.cov(X.T)
     return mahalanobis_scipy(s1,s2,VI)
@@ -225,10 +224,13 @@ def russellrao_distance_scipy(s1,s2):
 @Appender(seuclidean_scipy.__doc__)
 def seuclidean_distance_scipy(s1,s2):
     ""
-    [XA] = _copy_arrays_if_base_present([_convert_to_double(s1)])
-    [XB] = _copy_arrays_if_base_present([_convert_to_double(s2)])
+    [XA] = _convert_to_double(s1)
+    [XB] = _convert_to_double(s2)
     X = np.vstack([XA, XB])
     V = np.var(X, axis=0, ddof=1)
+    for i,e in enumerate(V):
+        if e == 0.0:
+            V[i] = V.mean()
     return np.sqrt(((XA - XB) ** 2 / V).sum())
 
 @string2vec

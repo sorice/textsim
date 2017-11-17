@@ -157,7 +157,16 @@ __not_implemented__ = [
     'Skew divergence',
     'Tau distance',
     'Containment distance',
-    'Q-gram Overlap',
     'Skip-grams distance',
     'Greedy String Tiling'
+]
+
+__not_documented__ = [
+    'Q-gram Overlap',
+    'Kullback-Leibler distance',  #test later from scipy.special import kl_div
+    'Hellinger distance',
+    'Jensen Shanon divergence',
+    'Harmonic Mean distance',     #se puede implementar usando numpy
+    'Skew divergence',
+    'Tau distance',
 ]
