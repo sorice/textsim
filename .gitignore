@@ -7,3 +7,6 @@
 *.bak
 *checkpoint.ipynb
 *.cache
+*_data
+*gutenberg
+.coverage

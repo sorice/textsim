@@ -1,0 +1,56 @@
+Pendientes
+------------
+
+v0.2
+=======
+- Add distances from Takelab, py_stringmatching, distance. Add takelab.ngram func to the preproc ipynb y test with timeit.
+- Implementar los tests para las medidas de tokens.
+- Incorporar las medidas basadas en conocimiento: knowledgedist module.
+- Incorporar las medidas basadas en corpus: corpusdist module
+    * incorporar los diferentes modelos de representación textual con Gensim, Vector Space Model, word2vec de Gensim, Bag of Words, TF-IDF de sklearn
+- Agregar Hellinger y Kullback Leibler desde Gensim
+
+
+- Valorar la inclusión de una clase Compound similar a Appender para componer la documentación fuera de la definición de las distancias. Objetivo: algunas funciones no tienen la descripción de la fórmula, es el caso de cosine_similarity de Sklearn.
+
+- Incorporar un experimental self measures con mis medidas personales. combinedist module.
+- Buscar en pypi las medidas de cada módulo no implementadas a ver sí están en algún paquete.
+
+v0.3
+========
+
+- Incrementar el número de distancias.
+    * Dentro de la enciclopedia hay muchas distancias para string que no están implementadas. Esto lleva una revisión después de valorar cuáles dan buenos resultados para la detección de paráfrasis.
+    * En la enciclopedia hay que mirar la sección 14.2 Distances on distribution laws que se pueden usar con vectores.
+
+v0.1
+=======
+- Hacer el paquete con disutils.[OK]
+- Implementar en utils la función para llamar a todas las diff distancias.[OK]
+- Implementar los tests para las medidas de string y tokens.[OK strings y preparado para las de tokens]
+- ver versión de LCS del libro Data Structures in Python.[OK]
+- Corregir la documentación de las distancias basadas en el estandar de doc establecido en y la experiencia de las 3 distancias documentadas correctamente:[OK]
+    /docs/howto_document_math_equations.md
+- Escribir una distancia interna completa con toda su documentación y probar.[OK]
+    * Implementar el completamiento de una distancia de scipy (lo más importante es construir el docstring poniendo cada parte del estandar como va dinámicamente sustituyendo las partes).
+    * Implementar el completamiento de una distancia de NLTK.
+- incluir la variable __to_implement__ inside combined module, to know this_version planified distances implementation.
+    * Revisar distancias de los artículos y documentar simultáneamente el paper de donde fue tomado.
+- incluir la variable __future_implement__ inside combined module, para guardar las medidas interesantes encontradas en los artículos pero que no pueden ser implementadas en esta versión
+- Agregar los módulos knowledge/distances.py y combined/distances.py
+    * mover la distancia de ulacia2016 y add la variable __no_implemented__ para escribir las diferentes distancias que encuentre en los artículos
+- Estudiar cuál variante de documentación para las ecuaciones es mejor, resultado: sphinx con la etiqueta .. math:: y usando el Tex math expression (expresión entre símbolo de $)[OK]
+- Completar el parámetro __not_implemented__ revisando la enciclopedia de distancias y las medidas usadas en los artículos, también el documento de simmetrics.[OK]
+- Revisar tema de hibridar la documentación de una función que importo de NLTK pero a la que quiero ampliar su documentación con algo que tengo de mi propia inspiración.(ver código dentro de pandas)[OK]
+- Importar todas las medidas de scipy que son de tokens de NLTK, Pattern, Jellyfish, Scipy. Ver en simmetrics cuales me faltan, anotar y luego buscar implementaciones existentes en pypi.[OK]
+    * Corregir los argumentos de entrada de todas las funciones.[OK]
+- Cerrar la v0.1 de las medidas de string revisando contra el simmetrics y viendo cuáles faltan, anotarlas y luego buscar implementaciones existentes en pypi.[OK]
+    * antes de hacer commit terminar el notebook de string distances y agregar al commit.[OK]
+- Importar todas las medidas de string from NLTK, Pattern, Jellyfish and swalign, y cerrar el /nltk/metrics/distance.py.[OK]-> NLTK tiene varias de tokens en este mismo fichero.
+    * agregar la palabra distance al final de todas las def de func. Ej. euclidean_distance[OK]
+- Lograr que no se importen las funciones externas sí la lib externa no está instalada. Probarlo con jellyfish.[OK]
+- Implementar los decoradores para pasar a cada función cuando trabaja como string, term, vector o sparse or non-sparse matrix.[OK, comenzado y metido en la arquitectura]
+- Revisar la conveniencia de tener strindist como módulos para lograr hacer esto:[OK, fue necesario para manejar los import de libs externas en los __init__.py de una forma más simple]
+    from textsim.stringdist import lcs (y que me autocomplete después del import)
+- Revisar tema de hibridar la documentación de una función que importo de NLTK pero modificar la salida scoring el resultado (o sea dividir por el length max y llevar a 1).[OK]
+- Revisar tema de los imports [OK]
