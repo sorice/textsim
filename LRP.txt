@@ -10,7 +10,6 @@ v0.2
     * incorporar los diferentes modelos de representación textual con Gensim, Vector Space Model, word2vec de Gensim, Bag of Words, TF-IDF de sklearn
 - Agregar Hellinger y Kullback Leibler desde Gensim
 
-
 - Valorar la inclusión de una clase Compound similar a Appender para componer la documentación fuera de la definición de las distancias. Objetivo: algunas funciones no tienen la descripción de la fórmula, es el caso de cosine_similarity de Sklearn.
 
 - Incorporar un experimental self measures con mis medidas personales. combinedist module.

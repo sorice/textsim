@@ -18,10 +18,12 @@ def score_original(func):
 def string2tokenset(func):
     @wraps(func)
     def inner(s1,s2):
-        s1 = s1.lower()
-        s2 = s2.lower()
-        s1 = set([word for word in s1.split()])
-        s2 = set([word for word in s2.split()])
+        if isinstance(s1,str) and isinstance(s2,str):
+            s1 = set([word for word in s1.split()])
+            s2 = set([word for word in s2.split()])
+        if isinstance(s1,list) and isinstance(s2,list):
+            s1 = set(s1)
+            s2 = set(s2)
         result = func(s1,s2)
         return result
     return inner
@@ -31,8 +33,10 @@ def string2vec(func):
     def inner(s1,s2):
         if isinstance(s1,str) and isinstance(s2,str):
             s1,s2 = string2vector(s1,s2)
+        elif isinstance(s1,list) and isinstance(s2,list):
+            s1,s2 = s1,s2
         else:
-            print('Both values need to be string objects')
+            print('Both values need to be string objects or numerical vectors!')
         result = func(s1,s2)
         return float(result)
     return inner
