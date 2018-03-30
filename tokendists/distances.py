@@ -154,7 +154,7 @@ def correlation_distance_scipy(s1,s2):
 @Appender(cosine_scipy.__doc__)
 def cosine_distance_scipy(s1,s2):
     ""
-    return cosine_scipy(s1,s2)
+    return 1-cosine_scipy(s1,s2)
 
 @string2vec
 @Appender(dice_scipy.__doc__)
@@ -178,7 +178,7 @@ def hamming_distance_scipy(s1,s2):
 @Appender(jaccard_scipy.__doc__)
 def jaccard_distance_scipy(s1,s2):
     ""
-    return jaccard_scipy(s1,s2)
+    return 1-jaccard_scipy(s1,s2)
 
 @string2vec
 @Appender(kulsinski_scipy.__doc__)

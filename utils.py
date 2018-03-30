@@ -39,6 +39,11 @@ def string2vector(s1,s2):
     | ---- | ---- | ---- | ---- | ----- | ---- |
     | s1   | 1    | 1    | 1    | 0     | 1    |
     | s2   | 1    | 1    | 1    | 1     | 0    |
+
+    :Note: Notice that CountVectorizer imported from sklearn deletes the
+    token 'a' in the first sentence, even with stop_words parameter = None.
+    The reason for that is the parameter token_pattern that select by default
+    all tokens of 2 or more characters.
     """
     count_v = CountVectorizer()
     tdm = count_v.fit_transform([s1, s2])

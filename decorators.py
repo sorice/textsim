@@ -16,6 +16,8 @@ def score_original(func):
     return inner
 
 def string2tokenset(func):
+    '''Convert string sentence to token set sentence.
+    Also made the same if the sentence is passed as a list of tokens.'''
     @wraps(func)
     def inner(s1,s2):
         if isinstance(s1,str) and isinstance(s2,str):
@@ -36,7 +38,8 @@ def string2vec(func):
         elif isinstance(s1,list) and isinstance(s2,list):
             s1,s2 = s1,s2
         else:
-            print('Both values need to be string objects or numerical vectors!')
+            pass
+            #print('Both values need to be string objects or numerical vectors!')
         result = func(s1,s2)
         return float(result)
     return inner
