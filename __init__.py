@@ -65,6 +65,7 @@ from textsim import stringdists
 from textsim import tokendists
 from textsim.stringdists import *
 from textsim.tokendists import *
+from textsim.utils import calc_all
 
 __all_distances__ = {}
 

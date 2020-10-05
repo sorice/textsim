@@ -5,6 +5,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from collections import deque
 
 def calc_all(s1,s2):
+    """Sort the available distances in textsim lib and calculate them.
+    Return a list with all measures."""
     sim_vector = []
     sim_vector.extend([s1,s2])
     #To control the order of features in Machine Learning experiments.
@@ -22,8 +24,8 @@ def calc_all(s1,s2):
     return sim_vector
 
 def string2vector(s1,s2):
-    """Return both strings into its correspondent vector inside the matrix
-    of token counts.
+    """Return both strings into its correspondent vector inside the 
+    matrix of token counts.
 
     :Example:
 
