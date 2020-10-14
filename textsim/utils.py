@@ -4,13 +4,17 @@ import textsim
 from sklearn.feature_extraction.text import CountVectorizer
 from collections import deque
 
-def calc_all(s1,s2):
+def calc_all(s1,s2, metrics = []):
     """Sort the available distances in textsim lib and calculate them.
     Return a list with all measures."""
+
+    if len(metrics) == 0:
+        metrics = sorted(textsim.__all_distances__.keys())
+
     sim_vector = []
     sim_vector.extend([s1,s2])
     #To control the order of features in Machine Learning experiments.
-    metrics = sorted(textsim.__all_distances__.keys())
+    
     for metric in metrics:
         value = textsim.__all_distances__[metric](s1, s2)
         #The next flow is to facilitate sklearn-cvs and weka-arff further
@@ -42,7 +46,7 @@ def string2vector(s1,s2):
     | s1   | 1    | 1    | 1    | 0     | 1    |
     | s2   | 1    | 1    | 1    | 1     | 0    |
 
-    :Note: Notice that CountVectorizer imported from sklearn deletes the
+    :Note: Notice that CountVectorizer, imported from sklearn, deletes the
     token 'a' in the first sentence, even with stop_words parameter = None.
     The reason for that is the parameter token_pattern that select by default
     all tokens of 2 or more characters.

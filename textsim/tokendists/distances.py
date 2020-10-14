@@ -212,7 +212,11 @@ def minkowski_distance_scipy(s1,s2):
 @Appender(rogerstanimoto_scipy.__doc__)
 def rogerstanimoto_distance_scipy(s1,s2):
     ""
-    return rogerstanimoto_scipy(s1,s2)
+    try:
+        score = rogerstanimoto_scipy(s1,s2)
+        return score
+    except: 
+        return 0.0
 
 @string2vec
 @Appender(russellrao_scipy.__doc__)
@@ -237,13 +241,21 @@ def seuclidean_distance_scipy(s1,s2):
 @Appender(sokalmichener_scipy.__doc__)
 def sokalmichener_distance_scipy(s1,s2):
     ""
-    return sokalmichener_scipy(s1,s2)
+    try:
+        score = sokalmichener_scipy(s1,s2)
+        return score
+    except:
+        return 0.0
 
 @string2vec
 @Appender(sokalsneath_scipy.__doc__)
 def sokalsneath_distance_scipy(s1,s2):
     ""
-    return sokalsneath_scipy(s1,s2)
+    try:
+        score = sokalsneath_scipy(s1,s2)
+        return score
+    except:
+        return 0.0
 
 @string2vec
 @Appender(sqeuclidean_scipy.__doc__)
